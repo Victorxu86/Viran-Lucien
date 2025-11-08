@@ -70,8 +70,8 @@ export default function Nav() {
     const onEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(null);
     };
-    window.addEventListener(\"keydown\", onEsc);
-    return () => window.removeEventListener(\"keydown\", onEsc);
+    window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
   }, []);
 
   // 点击外部收起
