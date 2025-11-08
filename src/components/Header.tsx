@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import Nav from "@/components/Nav";
 
 export default function Header() {
   return (
@@ -10,29 +11,12 @@ export default function Header() {
         <a href="/" className="text-lg font-medium tracking-wide">
           Viran Lucien
         </a>
-        <nav className="hidden items-center gap-6 text-sm sm:flex">
-          <a className="hover:opacity-70" href="/collection">
-            Collection
-          </a>
-          <a className="hover:opacity-70" href="/the-material">
-            The Material
-          </a>
-          <a className="hover:opacity-70" href="/lookbook">
-            Lookbook
-          </a>
-          <a className="hover:opacity-70" href="/brand">
-            Brand
-          </a>
-          <a className="hover:opacity-70" href="/client-service">
-            Client Service
-          </a>
-          <a className="hover:opacity-70" href="/account">
-            Account
-          </a>
-          <a className="hover:opacity-70" href="/cart">
-            Cart
-          </a>
-        </nav>
+        <div className="hidden sm:block">
+          <Nav />
+        </div>
+        <a href="/cart" className="text-sm hover:opacity-80">
+          Cart
+        </a>
       </Container>
     </header>
   );
