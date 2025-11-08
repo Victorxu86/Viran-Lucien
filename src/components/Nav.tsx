@@ -1,7 +1,7 @@
 "use client";
 
-import Link from \"next/link\";
-import { useCallback, useEffect, useRef, useState } from \"react\";
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type NavItem = {
   label: string;
@@ -11,41 +11,41 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   {
-    label: \"Collection\",
-    href: \"/collection\",
+    label: "Collection",
+    href: "/collection",
     panel: [
-      { label: \"All Products\", href: \"/collection/all\" },
-      { label: \"Tops\", href: \"/collection/tops\" },
-      { label: \"Bottoms\", href: \"/collection/bottoms\" },
-      { label: \"Outerwear\", href: \"/collection/outerwear\" },
+      { label: "All Products", href: "/collection/all" },
+      { label: "Tops", href: "/collection/tops" },
+      { label: "Bottoms", href: "/collection/bottoms" },
+      { label: "Outerwear", href: "/collection/outerwear" },
     ],
   },
-  { label: \"The Material\", href: \"/the-material\", panel: [
-    { label: \"Fabric Story\", href: \"/the-material/fabric-story\" },
-    { label: \"Craftsmanship\", href: \"/the-material/craftsmanship\" },
-    { label: \"Color Philosophy\", href: \"/the-material/color-philosophy\" },
+  { label: "The Material", href: "/the-material", panel: [
+    { label: "Fabric Story", href: "/the-material/fabric-story" },
+    { label: "Craftsmanship", href: "/the-material/craftsmanship" },
+    { label: "Color Philosophy", href: "/the-material/color-philosophy" },
   ]},
-  { label: \"Lookbook\", href: \"/lookbook\" },
-  { label: \"Brand\", href: \"/brand\", panel: [
-    { label: \"About\", href: \"/brand/about\" },
-    { label: \"Design Ethos\", href: \"/brand/design-ethos\" },
-    { label: \"Journal\", href: \"/brand/journal\" },
+  { label: "Lookbook", href: "/lookbook" },
+  { label: "Brand", href: "/brand", panel: [
+    { label: "About", href: "/brand/about" },
+    { label: "Design Ethos", href: "/brand/design-ethos" },
+    { label: "Journal", href: "/brand/journal" },
   ]},
-  { label: \"Client Service\", href: \"/client-service\", panel: [
-    { label: \"Store Locator\", href: \"/client-service/store-locator\" },
-    { label: \"Contact\", href: \"/client-service/contact\" },
-    { label: \"Appointment\", href: \"/client-service/appointment\" },
-    { label: \"Shipping & Returns\", href: \"/client-service/shipping-returns\" },
-    { label: \"FAQ\", href: \"/client-service/faq\" },
+  { label: "Client Service", href: "/client-service", panel: [
+    { label: "Store Locator", href: "/client-service/store-locator" },
+    { label: "Contact", href: "/client-service/contact" },
+    { label: "Appointment", href: "/client-service/appointment" },
+    { label: "Shipping & Returns", href: "/client-service/shipping-returns" },
+    { label: "FAQ", href: "/client-service/faq" },
   ]},
-  { label: \"Account\", href: \"/account\", panel: [
-    { label: \"Login\", href: \"/account/login\" },
-    { label: \"Register\", href: \"/account/register\" },
-    { label: \"Orders\", href: \"/account/orders\" },
-    { label: \"Wishlist\", href: \"/account/wishlist\" },
-    { label: \"Settings\", href: \"/account/settings\" },
+  { label: "Account", href: "/account", panel: [
+    { label: "Login", href: "/account/login" },
+    { label: "Register", href: "/account/register" },
+    { label: "Orders", href: "/account/orders" },
+    { label: "Wishlist", href: "/account/wishlist" },
+    { label: "Settings", href: "/account/settings" },
   ]},
-  { label: \"Cart\", href: \"/cart\" },
+  { label: "Cart", href: "/cart" },
 ];
 
 export default function Nav() {
@@ -68,7 +68,7 @@ export default function Nav() {
 
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => {
-      if (e.key === \"Escape\") setOpen(null);
+      if (e.key === "Escape") setOpen(null);
     };
     window.addEventListener(\"keydown\", onEsc);
     return () => window.removeEventListener(\"keydown\", onEsc);
@@ -80,13 +80,13 @@ export default function Nav() {
       if (!navRef.current) return;
       if (!navRef.current.contains(e.target as Node)) setOpen(null);
     }
-    document.addEventListener(\"click\", onDocClick);
-    return () => document.removeEventListener(\"click\", onDocClick);
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
   }, []);
 
   return (
-    <div className=\"relative\" ref={navRef}>
-      <ul className=\"flex items-center gap-6\">
+    <div className="relative" ref={navRef}>
+      <ul className="flex items-center gap-6">
         {NAV_ITEMS.map((item) => {
           const hasPanel = !!item.panel?.length;
           const isOpen = open === item.label;
@@ -95,33 +95,33 @@ export default function Nav() {
               key={item.label}
               onMouseEnter={() => hasPanel && handleOpen(item.label)}
               onMouseLeave={() => hasPanel && handleOpen(null)}
-              className=\"relative\"
+              className="relative"
             >
               <Link
                 href={item.href}
-                className=\"nav-link text-sm\"
+                className="nav-link text-sm"
                 onFocus={() => hasPanel && handleOpen(item.label)}
                 onBlur={() => hasPanel && handleOpen(null)}
-                aria-haspopup={hasPanel ? \"menu\" : undefined}
+                aria-haspopup={hasPanel ? "menu" : undefined}
                 aria-expanded={isOpen}
               >
                 {item.label}
-                <span className={`nav-underline ${isOpen ? \"is-active\" : \"\"}`} />
+                <span className={`nav-underline ${isOpen ? "is-active" : ""}`} />
               </Link>
 
               {hasPanel ? (
                 <div
-                  className={`nav-panel ${isOpen ? \"is-open\" : \"\"}`}
-                  role=\"menu\"
+                  className={`nav-panel ${isOpen ? "is-open" : ""}`}
+                  role="menu"
                 >
-                  <div className=\"container py-6\">
-                    <div className=\"grid grid-cols-2 gap-6 sm:grid-cols-3\">
+                  <div className="container py-6">
+                    <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
                       {item.panel!.map((link) => (
                         <Link
                           key={link.href}
                           href={link.href}
-                          className=\"block py-2 text-sm hover:opacity-80\"
-                          role=\"menuitem\"
+                          className="block py-2 text-sm hover:opacity-80"
+                          role="menuitem"
                         >
                           {link.label}
                         </Link>
