@@ -10,7 +10,7 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="relative">
-        <div className="media-hover">
+        <div className="media-hover media-frame">
           <img
             src="/hero.svg"
             alt="Viran Lucien — Quiet luxury editorial hero"
@@ -46,7 +46,7 @@ export default function Home() {
               了解更多
             </Link>
           </div>
-          <div className="media-hover rounded-sm" style={{ border: "1px solid var(--accent-12)" }}>
+          <div className="media-hover media-frame rounded-sm">
             <img src="/feature-1.svg" alt="Fabric texture" className="w-full h-auto" />
           </div>
         </div>
@@ -66,7 +66,7 @@ export default function Home() {
 
       {/* Lookbook */}
       <Section title="Lookbook" description="以编辑视角呈现结构与质感。">
-        <div className="media-hover rounded-sm" style={{ border: "1px solid var(--accent-12)" }}>
+        <div className="media-hover media-frame rounded-sm">
           <img src="/story-1.svg" alt="Lookbook editorial" className="w-full h-auto" />
         </div>
         <div className="mt-6">

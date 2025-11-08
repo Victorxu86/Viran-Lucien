@@ -15,7 +15,7 @@ export default function ProductCard({
 }: Props) {
   return (
     <article className="space-y-3">
-      <div className="media-hover rounded-sm" style={{ border: "1px solid var(--accent-12)" }}>
+      <div className="media-hover media-frame rounded-sm">
         <Image
           src={imageSrc}
           alt={title}

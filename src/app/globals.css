@@ -183,6 +183,19 @@ hr {
 }
 .media-hover:hover img { transform: scale(1.02); }
 
+/* Warm camel frame for all media blocks */
+.media-frame {
+  border: 1px solid var(--accent-30);
+  border-radius: 2px;
+  background: transparent;
+}
+.media-frame img,
+.media-frame video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 /* Page fade-in 300–500ms */
 @keyframes fade-in {
   from { opacity: 0; }
