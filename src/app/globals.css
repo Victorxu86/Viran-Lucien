@@ -2,9 +2,9 @@
 
 :root {
   /* Brand palette */
-  --background: rgb(255, 250, 245); /* #FFFAF5 */
-  --foreground: #111111; /* black */
-  --muted-foreground: #525252; /* dark gray for secondary text */
+  --background: #FFF9F5; /* rgb(255, 249, 245) */
+  --foreground: #000000; /* true black */
+  --muted-foreground: #1A1A1A; /* deep charcoal for secondary text */
 }
 
 @theme inline {
@@ -12,6 +12,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-headline);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,3 +29,52 @@ body {
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, Apple Color Emoji,
     Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
+
+/* Editorial headline rhythm */
+h1, h2, h3 {
+  font-family: var(--font-headline), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-weight: 600; }
+h2, h3 { font-weight: 500; }
+
+/* Quiet link + button system */
+a { transition: opacity .2s ease, color .2s ease; }
+a:hover { opacity: .85; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  height: 2.5rem;
+  padding: 0 .875rem;
+  font-size: .875rem;
+  line-height: 1;
+  border: 1px solid rgba(0,0,0,.12);
+  color: var(--foreground);
+  background: transparent;
+  transition: background-color .2s ease, border-color .2s ease, opacity .2s ease;
+}
+.btn:hover { background: rgba(0,0,0,.035); }
+.btn--text {
+  border: 0;
+  padding: 0;
+  height: auto;
+}
+
+/* Media hover: subtle zoom 2–3% and soft shadow */
+.media-hover { overflow: hidden; }
+.media-hover img {
+  transition: transform .35s ease, opacity .35s ease;
+  will-change: transform;
+}
+.media-hover:hover img { transform: scale(1.02); }
+
+/* Page fade-in 300–500ms */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.page { animation: fade-in 400ms ease both; }

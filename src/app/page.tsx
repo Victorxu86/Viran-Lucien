@@ -10,20 +10,14 @@ export default function Home() {
         <p className="mt-6 max-w-xl text-zinc-600 dark:text-zinc-400">
           独立服装品牌。即将上线：首发系列、Lookbook、订阅与门店信息。
         </p>
-        <div className="mt-8 flex gap-4">
-          <Link
-            href="/shop"
-            className="rounded-full bg-black px-6 py-3 text-sm text-white transition-colors hover:bg-[#383838] dark:bg-white dark:text-black dark:hover:bg-[#ccc]"
-          >
-            进入商店（即将上线）
+        <nav className="mt-10 flex gap-6">
+          <Link href="/collection" className="btn">
+            浏览系列
           </Link>
-          <Link
-            href="/about"
-            className="rounded-full border border-black/10 px-6 py-3 text-sm transition-colors hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-          >
-            了解品牌
+          <Link href="/the-material" className="btn btn--text">
+            材质理念
           </Link>
-        </div>
+        </nav>
       </section>
     </div>
   );

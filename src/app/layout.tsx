@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -9,6 +9,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const newsreader = Newsreader({
+  variable: "--font-headline",
   subsets: ["latin"],
 });
 
@@ -43,10 +48,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <header className="fixed inset-x-0 top-0 z-50 border-b border-black/10 bg-background/60 backdrop-blur">
+      <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}>
+        <header className="fixed inset-x-0 top-0 z-50 border-b border-black/10 bg-background/90">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-            <a href="/" className="text-lg font-semibold tracking-widest">
+            <a href="/" className="text-lg font-medium tracking-wide">
               Viran Lucien
             </a>
             <nav className="hidden items-center gap-6 text-sm sm:flex">
@@ -60,7 +65,7 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <main className="pt-20">{children}</main>
+        <main className="page pt-20">{children}</main>
         <footer className="border-t border-black/10 py-10 text-center text-sm text-zinc-500">
           © {new Date().getFullYear()} Viran Lucien. All rights reserved.
         </footer>
