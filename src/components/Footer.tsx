@@ -7,7 +7,7 @@ export default function Footer() {
       style={{ borderColor: "var(--accent-12)" }}
     >
       <Container>
-        © {new Date().getFullYear()} Viran Lucien. All rights reserved.
+        © {new Date().getFullYear()}. All rights reserved.
       </Container>
     </footer>
   );
