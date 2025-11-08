@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "git add -A && git commit -m \"${npm_config_m:-chore: update}\" && git push"
   },
   "dependencies": {
     "react": "19.2.0",

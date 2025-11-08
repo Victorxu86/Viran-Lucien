@@ -50,18 +50,13 @@ export default function RootLayout({
               Viran Lucien
             </a>
             <nav className="hidden items-center gap-6 text-sm sm:flex">
-              <a className="hover:opacity-70" href="/shop">
-                Shop
-              </a>
-              <a className="hover:opacity-70" href="/lookbook">
-                Lookbook
-              </a>
-              <a className="hover:opacity-70" href="/about">
-                About
-              </a>
-              <a className="hover:opacity-70" href="/contact">
-                Contact
-              </a>
+              <a className="hover:opacity-70" href="/collection">Collection</a>
+              <a className="hover:opacity-70" href="/the-material">The Material</a>
+              <a className="hover:opacity-70" href="/lookbook">Lookbook</a>
+              <a className="hover:opacity-70" href="/brand">Brand</a>
+              <a className="hover:opacity-70" href="/client-service">Client Service</a>
+              <a className="hover:opacity-70" href="/account">Account</a>
+              <a className="hover:opacity-70" href="/cart">Cart</a>
             </nav>
           </div>
         </header>
