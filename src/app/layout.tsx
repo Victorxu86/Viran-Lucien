@@ -49,7 +49,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}>
-        <header className="fixed inset-x-0 top-0 z-50 border-b border-black/10 bg-background/90">
+        <header
+          className="fixed inset-x-0 top-0 z-50 border-b bg-background/90"
+          style={{ borderColor: "var(--accent-12)" }}
+        >
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
             <a href="/" className="text-lg font-medium tracking-wide">
               Viran Lucien
@@ -66,7 +69,10 @@ export default function RootLayout({
           </div>
         </header>
         <main className="page pt-20">{children}</main>
-        <footer className="border-t border-black/10 py-10 text-center text-sm text-zinc-500">
+        <footer
+          className="border-t py-10 text-center text-sm text-zinc-500"
+          style={{ borderColor: "var(--accent-12)" }}
+        >
           © {new Date().getFullYear()} Viran Lucien. All rights reserved.
         </footer>
       </body>

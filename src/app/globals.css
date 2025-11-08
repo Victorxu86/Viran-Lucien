@@ -5,6 +5,11 @@
   --background: #FFF9F5; /* rgb(255, 249, 245) */
   --foreground: #000000; /* true black */
   --muted-foreground: #1A1A1A; /* deep charcoal for secondary text */
+  /* Accent camel for lines/buttons */
+  --accent: #C8A27A; /* light camel */
+  --accent-30: rgba(200, 162, 122, 0.30);
+  --accent-12: rgba(200, 162, 122, 0.12);
+  --accent-06: rgba(200, 162, 122, 0.06);
 }
 
 @theme inline {
@@ -58,16 +63,21 @@ a:hover { opacity: .85; }
   padding: 0 .875rem;
   font-size: .875rem;
   line-height: 1;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid var(--accent-30);
   color: var(--foreground);
   background: transparent;
-  transition: background-color .2s ease, border-color .2s ease, opacity .2s ease;
+  transition: background-color .2s ease, border-color .2s ease, opacity .2s ease, color .2s ease;
 }
-.btn:hover { background: rgba(0,0,0,.035); }
+.btn:hover { background: var(--accent-06); }
 .btn--text {
   border: 0;
   padding: 0;
   height: auto;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--accent-12);
 }
 
 /* Media hover: subtle zoom 2–3% and soft shadow */

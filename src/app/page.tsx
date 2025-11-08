@@ -7,7 +7,7 @@ export default function Home() {
         <h1 className="text-5xl font-semibold tracking-tight sm:text-6xl">
           Viran Lucien
         </h1>
-        <p className="mt-6 max-w-xl text-zinc-600 dark:text-zinc-400">
+        <p className="mt-6 max-w-xl text-zinc-600">
           独立服装品牌。即将上线：首发系列、Lookbook、订阅与门店信息。
         </p>
         <nav className="mt-10 flex gap-6">
