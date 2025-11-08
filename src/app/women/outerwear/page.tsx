@@ -1,10 +1,8 @@
 export default function WomenOuterwearPage() {
   return (
-    <section className="section">
-      <div className="container">
-        <h1>Women · Outerwear</h1>
-        <p className="mt-4 max-w-2xl">女士外套。</p>
-      </div>
+    <section className="mx-auto w-full max-w-6xl px-6 py-16">
+      <h1 className="text-3xl font-semibold tracking-tight">Women · Outerwear</h1>
+      <p className="mt-3 text-zinc-600">女士外套。</p>
     </section>
   );
 }

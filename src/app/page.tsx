@@ -18,9 +18,7 @@ export default function Home() {
           />
         </div>
         <Container className="py-12">
-          <h1 className="brand-wordmark">
-            Viran Lucien
-          </h1>
+          <h1 className="brand-display">Viran Lucien</h1>
           <p className="mt-6 max-w-2xl">
             材质先行，结构克制。以单色体系呈现安静而自信的现代风格。
           </p>

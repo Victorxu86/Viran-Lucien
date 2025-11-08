@@ -1,12 +1,8 @@
 export default function MenPage() {
   return (
-    <section className="section">
-      <div className="container">
-        <h1>Men</h1>
-        <p className="mt-4 max-w-2xl">
-          男士系列：Knitwear、Shirts、Pants、Outerwear、Accessories。
-        </p>
-      </div>
+    <section className="mx-auto w-full max-w-6xl px-6 py-16">
+      <h1 className="text-4xl font-semibold tracking-tight">Men</h1>
+      <p className="mt-3 text-zinc-600">男装分类与系列入口。</p>
     </section>
   );
 }
