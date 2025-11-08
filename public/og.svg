@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .fg { fill: #111111; }
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1200" height="630" />
+  <g>
+    <text x="50%" y="48%" text-anchor="middle" class="fg" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-weight="600" font-size="92">
+      Viran Lucien
+    </text>
+    <text x="50%" y="60%" text-anchor="middle" class="fg" opacity="0.65" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="28" letter-spacing="1.5">
+      Independent Fashion Label
+    </text>
+  </g>
+</svg>
+
