@@ -18,7 +18,7 @@ export default function Home() {
           />
         </div>
         <Container className="py-12">
-          <h1 className="text-5xl font-semibold tracking-tight sm:text-6xl">
+          <h1 className="brand-wordmark">
             Viran Lucien
           </h1>
           <p className="mt-6 max-w-2xl">

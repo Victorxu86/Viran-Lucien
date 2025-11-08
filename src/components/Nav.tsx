@@ -20,32 +20,46 @@ const NAV_ITEMS: NavItem[] = [
       { label: "Outerwear", href: "/collection/outerwear" },
     ],
   },
-  { label: "The Material", href: "/the-material", panel: [
-    { label: "Fabric Story", href: "/the-material/fabric-story" },
-    { label: "Craftsmanship", href: "/the-material/craftsmanship" },
-    { label: "Color Philosophy", href: "/the-material/color-philosophy" },
-  ]},
-  { label: "Lookbook", href: "/lookbook" },
-  { label: "Brand", href: "/brand", panel: [
-    { label: "About", href: "/brand/about" },
-    { label: "Design Ethos", href: "/brand/design-ethos" },
-    { label: "Journal", href: "/brand/journal" },
-  ]},
-  { label: "Client Service", href: "/client-service", panel: [
-    { label: "Store Locator", href: "/client-service/store-locator" },
-    { label: "Contact", href: "/client-service/contact" },
-    { label: "Appointment", href: "/client-service/appointment" },
-    { label: "Shipping & Returns", href: "/client-service/shipping-returns" },
-    { label: "FAQ", href: "/client-service/faq" },
-  ]},
-  { label: "Account", href: "/account", panel: [
-    { label: "Login", href: "/account/login" },
-    { label: "Register", href: "/account/register" },
-    { label: "Orders", href: "/account/orders" },
-    { label: "Wishlist", href: "/account/wishlist" },
-    { label: "Settings", href: "/account/settings" },
-  ]},
-  { label: "Cart", href: "/cart" },
+  {
+    label: "The Materials",
+    href: "/the-material",
+    panel: [
+      { label: "Fabric Story", href: "/the-material/fabric-story" },
+      { label: "Craftsmanship", href: "/the-material/craftsmanship" },
+      { label: "Color Philosophy", href: "/the-material/color-philosophy" },
+    ],
+  },
+  {
+    label: "Brand",
+    href: "/brand",
+    panel: [
+      { label: "About", href: "/brand/about" },
+      { label: "Design Ethos", href: "/brand/design-ethos" },
+      { label: "Journal", href: "/brand/journal" },
+    ],
+  },
+  {
+    label: "Men",
+    href: "/men",
+    panel: [
+      { label: "Knitwear", href: "/men/knitwear" },
+      { label: "Shirts", href: "/men/shirts" },
+      { label: "Pants", href: "/men/pants" },
+      { label: "Outerwear", href: "/men/outerwear" },
+      { label: "Accessories", href: "/men/accessories" },
+    ],
+  },
+  {
+    label: "Women",
+    href: "/women",
+    panel: [
+      { label: "Knitwear", href: "/women/knitwear" },
+      { label: "Tops", href: "/women/tops" },
+      { label: "Pants & Skirts", href: "/women/bottoms" },
+      { label: "Outerwear", href: "/women/outerwear" },
+      { label: "Accessories", href: "/women/accessories" },
+    ],
+  },
 ];
 
 export default function Nav() {

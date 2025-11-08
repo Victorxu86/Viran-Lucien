@@ -63,6 +63,22 @@ h3 { font-size: clamp(1.25rem, 1.8vw, 1.5rem); line-height: 1.2; }
 p, li { font-size: 1rem; line-height: 1.9; color: var(--muted-foreground); }
 small { font-size: .875rem; color: var(--muted-foreground); }
 
+/* Artistic wordmark on homepage */
+.brand-wordmark {
+  font-family: var(--font-headline), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  font-size: clamp(3rem, 6.5vw, 5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  /* subtle outline + fill for editorial elegance */
+  -webkit-text-stroke: 0.4px rgba(0,0,0,0.15);
+  text-shadow:
+    0 0.5px 0 rgba(0,0,0,0.15),
+    0 1px 0 rgba(0,0,0,0.08);
+  font-feature-settings: "liga" 1, "kern" 1;
+  font-kerning: normal;
+}
+
 /* Quiet link + button system */
 a { transition: opacity .2s ease, color .2s ease; }
 a:hover { opacity: .85; }
@@ -91,9 +107,12 @@ a:hover { opacity: .85; }
 
 .nav-panel {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%) translateY(8px);
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  transform: translateY(8px);
   top: 100%;
+  max-width: var(--container-w);
   min-width: 560px;
   background: var(--background);
   border: 1px solid var(--accent-12);
@@ -106,7 +125,7 @@ a:hover { opacity: .85; }
 .nav-panel.is-open {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 
 .btn {
