@@ -10,6 +10,10 @@
   --accent-30: rgba(200, 162, 122, 0.30);
   --accent-12: rgba(200, 162, 122, 0.12);
   --accent-06: rgba(200, 162, 122, 0.06);
+  /* Spacing rhythm */
+  --space-section-y: 8rem;   /* 128px */
+  --space-section-y-sm: 6rem;/* 96px */
+  --container-w: 1200px;
 }
 
 @theme inline {
@@ -39,6 +43,8 @@ body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, Apple Color Emoji,
     Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Editorial headline rhythm */
@@ -49,6 +55,13 @@ h1, h2, h3 {
 
 h1 { font-weight: 600; }
 h2, h3 { font-weight: 500; }
+
+/* Typographic scale tuned for quiet luxury */
+h1 { font-size: clamp(2.5rem, 4vw, 3.75rem); line-height: 1.12; }
+h2 { font-size: clamp(1.75rem, 2.5vw, 2.25rem); line-height: 1.18; }
+h3 { font-size: clamp(1.25rem, 1.8vw, 1.5rem); line-height: 1.2; }
+p, li { font-size: 1rem; line-height: 1.9; color: var(--muted-foreground); }
+small { font-size: .875rem; color: var(--muted-foreground); }
 
 /* Quiet link + button system */
 a { transition: opacity .2s ease, color .2s ease; }
@@ -94,3 +107,16 @@ hr {
   to { opacity: 1; }
 }
 .page { animation: fade-in 400ms ease both; }
+
+/* Layout helpers */
+.container {
+  max-width: var(--container-w);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+.section {
+  padding-block: var(--space-section-y);
+}
+@media (max-width: 768px) {
+  .section { padding-block: var(--space-section-y-sm); }
+}

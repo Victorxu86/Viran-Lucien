@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,32 +51,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}>
-        <header
-          className="fixed inset-x-0 top-0 z-50 border-b bg-background/90"
-          style={{ borderColor: "var(--accent-12)" }}
-        >
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-            <a href="/" className="text-lg font-medium tracking-wide">
-              Viran Lucien
-            </a>
-            <nav className="hidden items-center gap-6 text-sm sm:flex">
-              <a className="hover:opacity-70" href="/collection">Collection</a>
-              <a className="hover:opacity-70" href="/the-material">The Material</a>
-              <a className="hover:opacity-70" href="/lookbook">Lookbook</a>
-              <a className="hover:opacity-70" href="/brand">Brand</a>
-              <a className="hover:opacity-70" href="/client-service">Client Service</a>
-              <a className="hover:opacity-70" href="/account">Account</a>
-              <a className="hover:opacity-70" href="/cart">Cart</a>
-            </nav>
-          </div>
-        </header>
+        <Header />
         <main className="page pt-20">{children}</main>
-        <footer
-          className="border-t py-10 text-center text-sm text-zinc-500"
-          style={{ borderColor: "var(--accent-12)" }}
-        >
-          © {new Date().getFullYear()} Viran Lucien. All rights reserved.
-        </footer>
+        <Footer />
       </body>
     </html>
   );
