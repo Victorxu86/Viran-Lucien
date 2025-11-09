@@ -90,15 +90,6 @@ export default function MenClient() {
     appearRefs.current[idx] = el;
   };
 
-  const CatButton = ({ value, label }: { value: Category; label: string }) => (
-    <button
-      onClick={() => setCat(value)}
-      className={`px-2 py-1 text-sm ${cat === value ? "underline" : "hover:opacity-80"}`}
-    >
-      {label}
-    </button>
-  );
-
   return (
     <section className="section">
       <Container>
@@ -108,12 +99,20 @@ export default function MenClient() {
             <p className="mt-2 text-sm text-zinc-600">简洁、克制与材质优先的男装浏览。</p>
           </div>
           <div className="flex items-center gap-6">
-            <nav className="flex items-center gap-3">
-              <CatButton value="all" label="All" />
-              <CatButton value="tops" label="Tops" />
-              <CatButton value="bottoms" label="Bottoms" />
-              <CatButton value="outerwear" label="Outerwear" />
-            </nav>
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-zinc-700">Category</label>
+              <select
+                className="border bg-transparent px-2 py-1 text-sm"
+                style={{ borderColor: "var(--accent-12)" }}
+                value={cat}
+                onChange={(e) => setCat(e.target.value as Category)}
+              >
+                <option value="all">All</option>
+                <option value="tops">Tops</option>
+                <option value="bottoms">Bottoms</option>
+                <option value="outerwear">Outerwear</option>
+              </select>
+            </div>
             <div className="flex items-center gap-2">
               <label className="text-sm text-zinc-700">Sort</label>
               <select
