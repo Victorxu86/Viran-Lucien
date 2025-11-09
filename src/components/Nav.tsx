@@ -111,26 +111,6 @@ export default function Nav() {
             ],
           },
           {
-            label: "Brand",
-            href: "/brand",
-            panel: [
-              { label: "About", href: "/brand/about" },
-              { label: "Design Ethos", href: "/brand/design-ethos" },
-              { label: "Journal", href: "/brand/journal" },
-            ],
-          },
-          {
-            label: "Client Service",
-            href: "/client-service",
-            panel: [
-              { label: "Store Locator", href: "/client-service/store-locator" },
-              { label: "Contact", href: "/client-service/contact" },
-              { label: "Appointment", href: "/client-service/appointment" },
-              { label: "Shipping & Returns", href: "/client-service/shipping-returns" },
-              { label: "FAQ", href: "/client-service/faq" },
-            ],
-          },
-          {
             label: "Men",
             href: "/men",
             panel: [
