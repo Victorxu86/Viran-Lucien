@@ -87,6 +87,11 @@ a:hover { opacity: .85; }
   transform: scaleX(1);
 }
 
+.nav-link--low {
+  position: relative;
+  top: 2px; /* 轻微下移，不改变头部厚度 */
+}
+
 .nav-panel {
   position: absolute;
   left: 50%;

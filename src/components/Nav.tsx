@@ -144,7 +144,7 @@ export default function Nav() {
             >
               <Link
                 href={item.href}
-                className="nav-link text-sm"
+                className={`nav-link text-sm ${["Collection","The Materials","Men","Women"].includes(item.label) ? "nav-link--low" : ""}`}
                 onFocus={() => hasPanel && handleOpen(item.label)}
                 onBlur={() => hasPanel && handleOpen(null)}
                 aria-haspopup={hasPanel ? "menu" : undefined}
