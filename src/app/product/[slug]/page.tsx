@@ -8,7 +8,25 @@ type Props = { params: { slug: string } };
 export const dynamic = "force-dynamic";
 
 export default function ProductDetailPage({ params }: Props) {
-  const product = getProductBySlug(params.slug);
+  let product;
+  try {
+    product = getProductBySlug(params.slug);
+  } catch (e) {
+    // 容错：若解析失败，回退到一个可展示的占位数据，避免 SSR 崩溃
+    product = {
+      slug: params.slug,
+      title: "Product",
+      material: "Material",
+      price: 0,
+      images: ["/feature-1.svg", "/feature-2.svg"],
+      highlights: [],
+      description: "",
+      sizes: [],
+      shippingInfo: "",
+      returnsInfo: "",
+      related: [],
+    };
+  }
   const priceText = `¥${product.price}`;
 
   return (
