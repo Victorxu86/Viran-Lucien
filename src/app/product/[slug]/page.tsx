@@ -129,6 +129,22 @@ export default function ProductDetailPage({ params }: Props) {
               ))}
             </Grid>
           </div>
+          {/* 同类型推荐一行 */}
+          <div className="mt-8">
+            <Grid cols={4} className="md:grid-cols-3">
+              {product.related.filter((r) => r.category === product.category).slice(0, 4).map((r) => (
+                <ProductCard
+                  key={`same-${r.slug}`}
+                  title={r.title}
+                  subtitle={r.material}
+                  price={`¥${r.price}`}
+                  imageSrc={r.image}
+                  secondaryImageSrc={r.image}
+                  href={`/product/${r.slug}`}
+                />
+              ))}
+            </Grid>
+          </div>
         </div>
       </Container>
     </section>

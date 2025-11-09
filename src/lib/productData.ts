@@ -3,6 +3,7 @@ export type ProductDetail = {
   title: string;
   material: string;
   price: number;
+  category: "tops" | "bottoms" | "outerwear";
   images: string[];
   highlights: string[];
   description: string;
@@ -15,6 +16,7 @@ export type ProductDetail = {
     material: string;
     price: number;
     image: string;
+    category: "tops" | "bottoms" | "outerwear";
   }>;
 };
 
@@ -24,24 +26,28 @@ const BASES = [
     title: "Single-Color Knit",
     material: "Merino Wool",
     price: 2980,
+    category: "tops" as const,
   },
   {
     baseSlug: "structured-shirt",
     title: "Structured Shirt",
     material: "Egyptian Cotton",
     price: 1980,
+    category: "tops" as const,
   },
   {
     baseSlug: "minimal-coat",
     title: "Minimal Coat",
     material: "Double-Face Wool",
     price: 5980,
+    category: "outerwear" as const,
   },
   {
     baseSlug: "tailored-pants",
     title: "Tailored Pants",
     material: "Wool Blend",
     price: 2280,
+    category: "bottoms" as const,
   },
 ];
 
@@ -71,6 +77,7 @@ export function getProductBySlug(slug: string): ProductDetail {
     material: b.material,
     price: b.price + ((idx + i) % 5) * 60,
     image: pickImages(idx + i)[0],
+    category: b.category,
   }));
 
   return {
@@ -78,6 +85,7 @@ export function getProductBySlug(slug: string): ProductDetail {
     title: `${base.title} ${idx}`,
     material: base.material,
     price,
+    category: base.category,
     images,
     highlights: [
       "精纺纱线，肌理细腻亲肤",
