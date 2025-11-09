@@ -7,6 +7,7 @@ type Props = { params: { slug: string } };
 
 export default function ProductDetailPage({ params }: Props) {
   const product = getProductBySlug(params.slug);
+  const priceText = `¥${product.price}`;
 
   return (
     <section className="section">
@@ -26,7 +27,7 @@ export default function ProductDetailPage({ params }: Props) {
           <div>
             <h1 className="text-3xl font-semibold tracking-tight">{product.title}</h1>
             <p className="mt-2 text-sm text-zinc-700">{product.material}</p>
-            <div className="mt-4 text-lg">¥{product.price.toLocaleString()}</div>
+            <div className="mt-4 text-lg">{priceText}</div>
 
             {/* 尺码与数量 */}
             <div className="mt-6">
