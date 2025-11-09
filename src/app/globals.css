@@ -185,6 +185,25 @@ a:hover { opacity: .85; }
 .announce-arrow.left { left: 0; }
 .announce-arrow.right { right: 0; }
 
+/* Carousel viewport/track */
+.announce-viewport {
+  position: relative;
+  overflow: hidden;
+  height: 24px;
+}
+.announce-track {
+  display: flex;
+  width: 100%;
+  transition: transform .35s ease;
+  will-change: transform;
+}
+.announce-item {
+  min-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
