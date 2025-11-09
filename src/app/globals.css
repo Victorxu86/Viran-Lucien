@@ -169,16 +169,14 @@ a:hover { opacity: .85; }
   top: 50%;
   transform: translateY(-50%);
   width: 28px;
-  height: 24px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--foreground);
-  border: 1px solid var(--accent-12);
-  background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(2px);
-  border-radius: 3px;
-  opacity: .9;
+  border: 0;
+  background: transparent;
+  opacity: .75;
   transition: opacity .2s ease;
 }
 .announce-arrow:hover { opacity: 1; }
@@ -189,7 +187,7 @@ a:hover { opacity: .85; }
 .announce-viewport {
   position: relative;
   overflow: hidden;
-  height: 24px;
+  height: 32px;
 }
 .announce-track {
   display: flex;
@@ -202,6 +200,7 @@ a:hover { opacity: .85; }
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 32px;
 }
 
 .btn {

@@ -58,7 +58,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${tangerine.variable} antialiased`}>
         <Header />
-        <main className="page pt-20">{children}</main>
+        <main className="page pt-40">{children}</main>
         <Footer />
       </body>
     </html>

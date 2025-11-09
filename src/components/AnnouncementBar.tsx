@@ -72,7 +72,7 @@ export default function AnnouncementBar() {
       className={`announce-bar ${collapsed ? "is-collapsed" : ""}`}
       style={{ borderColor: "var(--accent-12)", background: "var(--accent-06)" }}
     >
-      <Container className="relative py-1 text-center text-xs">
+      <Container className="relative py-0 text-center text-xs">
         <div
           className="announce-viewport"
           onMouseEnter={() => setIsHover(true)}
