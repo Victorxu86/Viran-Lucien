@@ -17,10 +17,10 @@ export default function Header() {
             Viran Lucien
           </a>
           {/* 品牌下方装饰行（不占据布局高度） */}
-          <div className="pointer-events-none absolute left-1/2 top-full -translate-x-1/2 mt-1 hidden sm:flex items-center gap-3 text-[11px] leading-none text-zinc-700">
-            <span className="block h-px w-16 border-t" style={{ borderColor: "var(--accent-12)" }} />
+          <div className="pointer-events-none absolute left-1/2 top-full -translate-x-1/2 mt-0 hidden sm:flex items-center gap-2 brand-deco text-[12px] leading-none text-black">
+            <span className="brand-deco-line w-20" />
             <span className="tracking-wide">255. 250. 245</span>
-            <span className="block h-px w-16 border-t" style={{ borderColor: "var(--accent-12)" }} />
+            <span className="brand-deco-line w-20" />
           </div>
           {/* 右侧用户与购物袋图标 */}
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-4">

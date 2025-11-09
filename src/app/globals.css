@@ -311,6 +311,32 @@ hr {
   transition: transform .2s ease;
 }
 
+/* Brand decorative line under title */
+.brand-deco-line {
+  position: relative;
+  display: block;
+  height: 0;
+  border-top: 1.5px solid #000;
+}
+.brand-deco-line::before,
+.brand-deco-line::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 0;
+  height: 0;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+}
+.brand-deco-line::before {
+  left: -6px;
+  border-right: 6px solid #000; /* 左端尖角 */
+}
+.brand-deco-line::after {
+  right: -6px;
+  border-left: 6px solid #000;  /* 右端尖角 */
+}
+
 /* Page fade-in 300–500ms */
 @keyframes fade-in {
   from { opacity: 0; }
