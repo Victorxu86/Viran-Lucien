@@ -30,7 +30,6 @@ function Accordion({ title, items }: { title: string; items: string[] }) {
 
 export default function TheMaterialClient() {
   const heroRef = useRef<HTMLDivElement | null>(null);
-  const [activeId, setActiveId] = useState<string>(MATERIALS[0].id);
 
   // 细微 parallax
   useEffect(() => {
@@ -45,25 +44,6 @@ export default function TheMaterialClient() {
     };
     el.addEventListener("mousemove", onMove);
     return () => el.removeEventListener("mousemove", onMove);
-  }, []);
-
-  // 侧边索引高亮
-  useEffect(() => {
-    const sections = MATERIALS.map((m) => document.getElementById(m.id)).filter(
-      Boolean
-    ) as HTMLElement[];
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0.01 }
-    );
-    sections.forEach((s) => io.observe(s));
-    return () => io.disconnect();
   }, []);
 
   return (
@@ -100,10 +80,7 @@ export default function TheMaterialClient() {
         <Container>
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[220px,1fr]">
             {/* Sticky index */}
-            <aside
-              className="hidden lg:block sticky top-28 self-start z-0"
-              style={{ background: "var(--background)" }}
-            >
+            <aside className="hidden lg:block">
               <nav className="text-sm">
                 <div className="text-xs text-zinc-600">Materials</div>
                 <ul className="mt-3 space-y-2">
@@ -111,7 +88,7 @@ export default function TheMaterialClient() {
                     <li key={m.id}>
                       <a
                         href={`#${m.id}`}
-                        className={`hover:opacity-80 ${activeId === m.id ? "underline" : ""}`}
+                        className="hover:opacity-80"
                       >
                         {m.name}
                       </a>
