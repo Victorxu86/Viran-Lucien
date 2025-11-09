@@ -1,4 +1,4 @@
-\"use client\";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Container from "@/components/Container";
@@ -19,7 +19,7 @@ type Product = {
   imageAlt: string;
 };
 
-const PRODUCTS: Product[] = [
+const BASE_PRODUCTS: Product[] = [
   { slug: "single-color-knit", title: "Single-Color Knit", material: "Merino Wool", price: 2980, category: "tops", image: "/feature-2.svg", imageAlt: "Knitwear" },
   { slug: "structured-shirt", title: "Structured Shirt", material: "Egyptian Cotton", price: 1980, category: "tops", image: "/feature-3.svg", imageAlt: "Shirt" },
   { slug: "minimal-coat", title: "Minimal Coat", material: "Double-Face Wool", price: 5980, category: "outerwear", image: "/feature-1.svg", imageAlt: "Coat" },
@@ -28,17 +28,26 @@ const PRODUCTS: Product[] = [
   { slug: "field-jacket", title: "Field Jacket", material: "Cotton Twill", price: 3580, category: "outerwear", image: "/feature-1.svg", imageAlt: "Jacket" },
   { slug: "linen-shirt", title: "Linen Shirt", material: "Pure Linen", price: 1680, category: "tops", image: "/feature-3.svg", imageAlt: "Linen Shirt" },
   { slug: "classic-trouser", title: "Classic Trouser", material: "Virgin Wool", price: 2680, category: "bottoms", image: "/feature-2.svg", imageAlt: "Trouser" },
-  { slug: "long-coat", title: "Long Coat", material: "Wool Cashmere", price: 6980, category: "outerwear", image: "/feature-1.svg", imageAlt: "Long Coat" },
-  { slug: "overshirt", title: "Overshirt", material: "Brushed Cotton", price: 2380, category: "tops", image: "/feature-3.svg", imageAlt: "Overshirt" },
-  { slug: "pleated-pants", title: "Pleated Pants", material: "Wool", price: 2480, category: "bottoms", image: "/feature-2.svg", imageAlt: "Pleated Pants" },
-  { slug: "rain-coat", title: "Rain Coat", material: "Technical Fabric", price: 4680, category: "outerwear", image: "/feature-1.svg", imageAlt: "Rain Coat" },
 ];
+
+// 生成 40 条模拟数据；首屏默认显示 8 条，其余通过“加载更多”一次 +20
+const PRODUCTS: Product[] = Array.from({ length: 40 }).map((_, i) => {
+  const base = BASE_PRODUCTS[i % BASE_PRODUCTS.length];
+  const idx = i + 1;
+  return {
+    ...base,
+    slug: `${base.slug}-${idx}`,
+    title: `${base.title} ${idx}`,
+    price: base.price + (idx % 7) * 50,
+  };
+});
 
 export default function MenPage() {
   const router = useRouter();
   const params = useSearchParams();
   const [cat, setCat] = useState<Category>((params.get("cat") as Category) || "all");
   const [sort, setSort] = useState<Sort>((params.get("sort") as Sort) || "newest");
+  const [visible, setVisible] = useState<number>(8);
   const appearRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   // URL 同步
@@ -62,6 +71,8 @@ export default function MenPage() {
     return list;
   }, [cat, sort]);
 
+  const visibleList = useMemo(() => filtered.slice(0, visible), [filtered, visible]);
+
   // 进入视口淡入
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -74,9 +85,9 @@ export default function MenPage() {
       },
       { threshold: 0.15 }
     );
-    appearRefs.current.forEach((el) => el && io.observe(el));
+    appearRefs.current.slice(0, visibleList.length).forEach((el) => el && io.observe(el));
     return () => io.disconnect();
-  }, [filtered]);
+  }, [visibleList]);
 
   const setRefAt = (idx: number) => (el: HTMLDivElement | null) => {
     appearRefs.current[idx] = el;
@@ -123,25 +134,35 @@ export default function MenPage() {
         </header>
 
         <div className="mt-10">
-          <Grid cols={3}>
-            {filtered.map((p, idx) => (
+          <Grid cols={4}>
+            {visibleList.map((p, idx) => (
               <div
                 key={p.slug}
                 className="appear"
                 ref={setRefAt(idx)}
-                style={{ transitionDelay: `${(idx % 9) * 40}ms` }}
+                style={{ transitionDelay: `${(idx % 12) * 40}ms` }}
               >
                 <ProductCard
                   title={p.title}
                   subtitle={p.material}
                   price={`¥${p.price.toLocaleString()}`}
                   imageSrc={p.image}
-                  secondaryImageSrc={p.image} 
+                  secondaryImageSrc={p.image}
                   href={`/product/${p.slug}`}
                 />
               </div>
             ))}
           </Grid>
+          {visible < filtered.length ? (
+            <div className="mt-10 flex justify-center">
+              <button
+                className="btn"
+                onClick={() => setVisible((n) => Math.min(n + 20, filtered.length))}
+              >
+                加载更多（剩余 {Math.max(filtered.length - visible, 0)}）
+              </button>
+            </div>
+          ) : null}
         </div>
       </Container>
     </section>
