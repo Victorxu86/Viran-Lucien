@@ -32,6 +32,7 @@ export default function Home() {
 
       {/* Material narrative */}
       <Section
+        id="second-section"
         title="The Material"
         description="从纱线到织物，讲述我们对触感与结构的坚持。"
       >

@@ -1,5 +1,7 @@
 import Container from "@/components/Container";
 import Nav from "@/components/Nav";
+import dynamic from "next/dynamic";
+const AnnouncementBar = dynamic(() => import("@/components/AnnouncementBar"), { ssr: false });
 
 export default function Header() {
   return (
@@ -7,15 +9,8 @@ export default function Header() {
       className="fixed inset-x-0 top-0 z-50 border-b bg-background/90 site-header"
       style={{ borderColor: "var(--accent-12)" }}
     >
-      {/* 顶部小广播条 */}
-      <div
-        className="w-full border-b"
-        style={{ borderColor: "var(--accent-12)", background: "var(--accent-06)" }}
-      >
-        <Container className="py-1 text-center text-xs">
-          免费30天退换 · <a className="underline hover:opacity-80" href="/client-service/store-locator">门店与体验</a> · <a className="underline hover:opacity-80" href="/client-service/shipping-returns">物流与退换</a>
-        </Container>
-      </div>
+      {/* 顶部小广播条（轮播 + 滚动收起） */}
+      <AnnouncementBar />
       <Container className="py-4">
         {/* 顶部行：品牌名居中 */}
         <div className="relative flex items-center justify-center">
