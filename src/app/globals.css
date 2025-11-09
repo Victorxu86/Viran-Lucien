@@ -261,6 +261,51 @@ hr {
 .appear { opacity: 0; transform: translateY(8px); transition: opacity .4s ease, transform .4s ease; }
 .appear.is-in { opacity: 1; transform: translateY(0); }
 
+/* PDP gallery */
+.gallery { width: 100%; }
+.gallery-main { aspect-ratio: 4/5; }
+.gallery-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform .35s ease;
+}
+.gallery-slide { min-width: 100%; }
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  background: transparent;
+  border: 0;
+  opacity: .75;
+  transition: opacity .2s ease;
+}
+.gallery-arrow:hover { opacity: 1; }
+.gallery-arrow.left { left: 8px; }
+.gallery-arrow.right { right: 8px; }
+.gallery-thumbs {
+  display: grid;
+  grid-auto-flow: column;
+  gap: .5rem;
+  margin-top: .75rem;
+  overflow-x: auto;
+}
+.gallery-thumb {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--accent-12);
+  background: transparent;
+  padding: 0;
+}
+.gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gallery-thumb.is-active { border-color: var(--accent-30); }
+
 /* Page fade-in 300–500ms */
 @keyframes fade-in {
   from { opacity: 0; }

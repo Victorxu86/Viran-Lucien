@@ -2,6 +2,7 @@ import Container from "@/components/Container";
 import Grid from "@/components/Grid";
 import ProductCard from "@/components/ProductCard";
 import { getProductBySlug } from "@/lib/productData";
+import Gallery from "@/components/Gallery";
 
 type Props = { params: { slug: string } };
 
@@ -35,12 +36,7 @@ export default function ProductDetailPage({ params }: Props) {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           {/* 左：图像展示 */}
           <div className="space-y-6">
-            <div className="media-frame">
-              <img src={product.images[0]} alt={product.title} className="w-full h-auto" />
-            </div>
-            <div className="media-frame">
-              <img src={product.images[1]} alt={`${product.title} detail`} className="w-full h-auto" />
-            </div>
+            <Gallery images={product.images} />
           </div>
 
           {/* 右：信息区 */}
