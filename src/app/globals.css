@@ -250,6 +250,17 @@ hr {
   height: auto;
 }
 
+/* Product card interactions */
+.card { transition: transform .25s ease, box-shadow .25s ease; }
+.card:hover { transform: translateY(-2px); }
+.card:hover .media-frame > img:first-child { opacity: 0; }
+.card:hover .media-frame > img:last-child { opacity: 1; }
+.card:hover .card-price { opacity: 1; }
+
+/* Scroll appear */
+.appear { opacity: 0; transform: translateY(8px); transition: opacity .4s ease, transform .4s ease; }
+.appear.is-in { opacity: 1; transform: translateY(0); }
+
 /* Page fade-in 300–500ms */
 @keyframes fade-in {
   from { opacity: 0; }
