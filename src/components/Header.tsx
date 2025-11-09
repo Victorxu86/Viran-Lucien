@@ -1,7 +1,6 @@
 import Container from "@/components/Container";
 import Nav from "@/components/Nav";
-import dynamic from "next/dynamic";
-const AnnouncementBar = dynamic(() => import("@/components/AnnouncementBar"), { ssr: false });
+import AnnouncementBar from "@/components/AnnouncementBar";
 
 export default function Header() {
   return (
