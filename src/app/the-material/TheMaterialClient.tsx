@@ -100,7 +100,10 @@ export default function TheMaterialClient() {
         <Container>
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[220px,1fr]">
             {/* Sticky index */}
-            <aside className="hidden lg:block sticky top-24 self-start">
+            <aside
+              className="hidden lg:block sticky top-28 self-start z-0"
+              style={{ background: "var(--background)" }}
+            >
               <nav className="text-sm">
                 <div className="text-xs text-zinc-600">Materials</div>
                 <ul className="mt-3 space-y-2">
