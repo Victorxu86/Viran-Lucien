@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader, Tangerine } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -16,6 +16,12 @@ const geistMono = Geist_Mono({
 
 const newsreader = Newsreader({
   variable: "--font-headline",
+  subsets: ["latin"],
+});
+
+const tangerine = Tangerine({
+  variable: "--font-brand",
+  weight: "700",
   subsets: ["latin"],
 });
 
@@ -50,7 +56,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} ${tangerine.variable} antialiased`}>
         <Header />
         <main className="page pt-20">{children}</main>
         <Footer />

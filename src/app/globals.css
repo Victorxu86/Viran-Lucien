@@ -110,10 +110,10 @@ a:hover { opacity: .85; }
 }
 
 .brand-mark {
-  font-family: var(--font-headline), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 600;
-  letter-spacing: .02em;
+  font-family: var(--font-brand), var(--font-headline), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: 0;
   line-height: 1.1;
   /* 艺术字：低调渐变字色 + 轻微阴影 */
   background: linear-gradient(180deg, #1A1A1A 0%, #000 100%);
@@ -124,10 +124,10 @@ a:hover { opacity: .85; }
 }
 
 .brand-display {
-  font-family: var(--font-headline), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  font-size: clamp(3rem, 6vw, 5rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-brand), var(--font-headline), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  font-size: clamp(3.25rem, 7vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: 0;
   line-height: 1.05;
   background: linear-gradient(180deg, #1A1A1A 0%, #000 100%);
   -webkit-background-clip: text;
