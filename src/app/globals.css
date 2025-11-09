@@ -316,24 +316,11 @@ hr {
   position: relative;
   display: block;
   height: 0;
-  border-top: 1.5px solid #000;
+  border-top: 1px solid #000; /* 细黑线 */
 }
 .brand-deco-line::before,
 .brand-deco-line::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  background: #000;
-  border-radius: 2px;
-  transform: translateY(-50%) rotate(45deg) scale(1, .35);
-}
-.brand-deco-line::before {
-  left: -7px;
-}
-.brand-deco-line::after {
-  right: -7px;
+  content: none; /* 纯线条，无端帽 */
 }
 
 /* Page fade-in 300–500ms */
