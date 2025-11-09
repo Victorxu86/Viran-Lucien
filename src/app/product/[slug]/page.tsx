@@ -5,6 +5,8 @@ import { getProductBySlug } from "@/lib/productData";
 
 type Props = { params: { slug: string } };
 
+export const dynamic = "force-dynamic";
+
 export default function ProductDetailPage({ params }: Props) {
   const product = getProductBySlug(params.slug);
   const priceText = `¥${product.price}`;
@@ -105,7 +107,7 @@ export default function ProductDetailPage({ params }: Props) {
                   key={r.slug}
                   title={r.title}
                   subtitle={r.material}
-                  price={`¥${r.price.toLocaleString()}`}
+                  price={`¥${r.price}`}
                   imageSrc={r.image}
                   secondaryImageSrc={r.image}
                   href={`/product/${r.slug}`}
