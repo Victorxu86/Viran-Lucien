@@ -109,6 +109,10 @@ a:hover { opacity: .85; }
   transform: translateX(-50%) translateY(0);
 }
 
+.site-header {
+  box-shadow: 0 6px 20px rgba(0,0,0,.06);
+}
+
 .brand-mark {
   font-family: var(--font-brand), var(--font-headline), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   font-size: clamp(1.75rem, 3.5vw, 2.75rem);

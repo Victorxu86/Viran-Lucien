@@ -120,6 +120,17 @@ export default function Nav() {
             ],
           },
           {
+            label: "Client Service",
+            href: "/client-service",
+            panel: [
+              { label: "Store Locator", href: "/client-service/store-locator" },
+              { label: "Contact", href: "/client-service/contact" },
+              { label: "Appointment", href: "/client-service/appointment" },
+              { label: "Shipping & Returns", href: "/client-service/shipping-returns" },
+              { label: "FAQ", href: "/client-service/faq" },
+            ],
+          },
+          {
             label: "Men",
             href: "/men",
             panel: [
