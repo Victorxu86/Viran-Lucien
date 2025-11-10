@@ -1,5 +1,5 @@
 import "server-only";
-import { createClient } from "next-sanity";
+import { createClient } from "@sanity/client";
 import groq from "groq";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
