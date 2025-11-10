@@ -28,17 +28,13 @@ export default function Footer() {
           <div>
             <h3 className="text-base">Brand</h3>
             <ul className="mt-4 space-y-2 text-sm text-zinc-700">
-              <li><a className="hover:opacity-80" href="/brand/about">About</a></li>
               <li><a className="hover:opacity-80" href="/brand/design-ethos">Design Ethos</a></li>
-              <li><a className="hover:opacity-80" href="/brand/journal">Journal</a></li>
             </ul>
           </div>
           <div>
             <h3 className="text-base">Client Service</h3>
             <ul className="mt-4 space-y-2 text-sm text-zinc-700">
-              <li><a className="hover:opacity-80" href="/client-service/store-locator">Store Locator</a></li>
               <li><a className="hover:opacity-80" href="/client-service/contact">Contact</a></li>
-              <li><a className="hover:opacity-80" href="/client-service/appointment">Appointment</a></li>
               <li><a className="hover:opacity-80" href="/client-service/shipping-returns">Shipping & Returns</a></li>
               <li><a className="hover:opacity-80" href="/client-service/faq">FAQ</a></li>
             </ul>
