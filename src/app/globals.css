@@ -89,7 +89,7 @@ a:hover { opacity: .85; }
 
 .nav-link--low {
   position: relative;
-  top: 4px; /* 进一步下移，不改变头部厚度 */
+  top: 10px; /* 下移 10px，不改变头部厚度 */
 }
 
 .nav-panel {
