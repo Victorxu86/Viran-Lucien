@@ -12,7 +12,10 @@
   "dependencies": {
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "next": "16.0.1"
+    "next": "16.0.1",
+    "next-sanity": "^9.4.2",
+    "groq": "^3.49.0",
+    "@sanity/image-url": "^1.1.0"
   },
   "devDependencies": {
     "typescript": "^5",

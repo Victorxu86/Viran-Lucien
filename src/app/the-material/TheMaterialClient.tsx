@@ -4,6 +4,8 @@ import Container from "@/components/Container";
 import { MATERIALS } from "@/lib/materialsData";
 import { useEffect, useRef, useState } from "react";
 
+type Mat = typeof MATERIALS[number];
+
 function Accordion({ title, items }: { title: string; items: string[] }) {
   const [open, setOpen] = useState(false);
   return (
@@ -28,8 +30,9 @@ function Accordion({ title, items }: { title: string; items: string[] }) {
   );
 }
 
-export default function TheMaterialClient() {
+export default function TheMaterialClient({ initialMaterials }: { initialMaterials?: Mat[] }) {
   const heroRef = useRef<HTMLDivElement | null>(null);
+  const mats = initialMaterials && initialMaterials.length > 0 ? initialMaterials : MATERIALS;
 
   // 细微 parallax
   useEffect(() => {
@@ -84,7 +87,7 @@ export default function TheMaterialClient() {
               <nav className="text-sm">
                 <div className="text-xs text-zinc-600">Materials</div>
                 <ul className="mt-3 space-y-2">
-                  {MATERIALS.map((m) => (
+                  {mats.map((m) => (
                     <li key={m.id}>
                       <a
                         href={`#${m.id}`}
@@ -100,7 +103,7 @@ export default function TheMaterialClient() {
 
             {/* Sections */}
             <div className="space-y-16">
-              {MATERIALS.map((m, i) => (
+              {mats.map((m, i) => (
                 <section id={m.id} key={m.id} className="space-y-6 appear is-in">
                   <div className={`grid grid-cols-1 gap-8 md:grid-cols-2 ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}>
                     <div className="media-frame relative overflow-hidden group">
