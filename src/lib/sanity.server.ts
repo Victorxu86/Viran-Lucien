@@ -151,7 +151,14 @@ export async function fetchSeries(): Promise<SeriesDoc[]> {
 export type HomeDoc = {
   heroVideoUrl?: string;
   heroImage?: { asset?: { url?: string } };
-  featuredProducts?: Array<{ _ref: string }>;
+  featuredProducts?: Array<{
+    _id: string;
+    title: string;
+    slug?: { current: string };
+    price?: number;
+    material?: string;
+    images?: Array<{ asset?: { url?: string } }>;
+  }>;
 };
 
 const homeQuery = groq`*[_type == "home"][0]{
