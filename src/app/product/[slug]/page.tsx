@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import Grid from "@/components/Grid";
 import ProductCard from "@/components/ProductCard";
-import { fetchProductBySlug } from "@/lib/sanity.server";
+import { fetchProductBySlug, fetchProducts } from "@/lib/sanity.server";
 import Gallery from "@/components/Gallery";
 import { notFound } from "next/navigation";
 
@@ -14,6 +14,15 @@ export default async function ProductDetailPage({ params }: Props) {
   if (!doc && params.slug) {
     // 再尝试一次小写 slug（规避大小写/空白异常）
     doc = await fetchProductBySlug(params.slug.toLowerCase());
+  }
+  if (!doc) {
+    // 兜底：拉取列表再匹配 slug（防止某些编码/大小写问题）
+    const all = await fetchProducts({ limit: 120 });
+    const normalized = decodeURIComponent(String(params.slug || "")).trim().toLowerCase();
+    const hit = (all || []).find((p) => (p.slug?.current || "").toLowerCase() === normalized);
+    if (hit?.slug?.current) {
+      doc = await fetchProductBySlug(hit.slug.current);
+    }
   }
   if (!doc) return (
     <section className="section">
