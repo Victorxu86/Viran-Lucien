@@ -47,7 +47,9 @@ export default function ProductCard({
       </div>
     </article>
   );
-  return href ? <Link href={href.replace(/^\/product\/(.+)$/, (_m, s) => `/product/${encodeURIComponent(s)}`)}>{content}</Link> : content;
+  return href
+    ? <Link href={href.replace(/^\/product\/(.+)$/, (_m, s) => `/product?slug=${encodeURIComponent(s)}`)}>{content}</Link>
+    : content;
 }
 
 
