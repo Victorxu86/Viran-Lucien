@@ -41,7 +41,6 @@ const PRODUCTS: Product[] = Array.from({ length: 40 }).map((_, i) => {
   };
 });
 
-export default function WomenClient() {
 export default function WomenClient({ initialProducts }: { initialProducts?: Product[] }) {
   const router = useRouter();
   const params = useSearchParams();
