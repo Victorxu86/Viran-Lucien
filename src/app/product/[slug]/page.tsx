@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import Grid from "@/components/Grid";
 import ProductCard from "@/components/ProductCard";
-import { fetchProductBySlug, fetchProducts } from "@/lib/sanity.server";
+import { loadPdpBySlug } from "@/lib/pdp";
 import Gallery from "@/components/Gallery";
 import { notFound } from "next/navigation";
 
@@ -11,14 +11,8 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export default async function ProductDetailPage({ params }: Props) {
-  // 通过内部 API，对齐已验证可用的服务端行为；使用请求头构造绝对基址
-  const h = await import("next/headers").then(m => m.headers());
-  const host = h.get("x-forwarded-host") || h.get("host") || process.env.VERCEL_URL || "";
-  const proto = (h.get("x-forwarded-proto") || "https").split(",")[0];
-  const base = host ? `${proto}://${host}` : (process.env.NEXT_PUBLIC_SITE_URL || "");
-  const res = await fetch(`${base}/api/pdp?slug=${encodeURIComponent(params.slug)}`, { cache: "no-store" });
-  const data = await res.json();
-  if (!data?.ok || !data?.found || !data?.doc) return (
+  const product = await loadPdpBySlug(params.slug);
+  if (!product) return (
     <section className="section">
       <Container>
         <div className="py-24 text-center text-sm text-zinc-600">
@@ -27,17 +21,6 @@ export default async function ProductDetailPage({ params }: Props) {
       </Container>
     </section>
   );
-  const product = data.doc as {
-    title: string;
-    material: string;
-    price: number;
-    category: string;
-    images: string[];
-    sizes: Array<{ label: string; available: boolean }>;
-    craftsmanship: string[];
-    description: string;
-    related: Array<{ slug: string; title: string; material: string; price: number; image: string; category: string }>;
-  };
   const galleryImages = product.images;
   const priceText = `¥${product.price}`;
   const related = product.related;
