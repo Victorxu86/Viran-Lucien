@@ -71,10 +71,7 @@ export type ProductDetailDoc = ProductCardDoc & {
   }>;
 };
 
-const productListQuery = groq`*[_type == "product" 
-  && (!defined($gender) || gender == $gender) 
-  && (!defined($category) || category == $category)
-]{
+const productListQuery = groq`*[_type == "product"]{
   _id,
   title,
   slug,
@@ -106,8 +103,16 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
 export async function fetchProducts(params: { gender?: "men" | "women"; category?: string; limit?: number } = {}): Promise<ProductCardDoc[]> {
   try {
     const { gender, category, limit = 40 } = params;
-    const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, { gender, category, limit });
-    return docs || [];
+    const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, { limit });
+    let list = docs || [];
+    if (gender) {
+      list = list.filter((d) => (d.gender || "").toLowerCase() === gender);
+    }
+    if (category) {
+      const cat = category.toLowerCase();
+      list = list.filter((d) => (d.category || "").toLowerCase() === cat);
+    }
+    return list;
   } catch {
     return [];
   }
