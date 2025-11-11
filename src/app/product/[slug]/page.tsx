@@ -11,10 +11,11 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export default async function ProductDetailPage({ params }: Props) {
-  // 通过内部 API 对齐已验证可用的服务端行为，避免直连在页面环境的差异
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  // 通过内部 API，对齐已验证可用的服务端行为；使用请求头构造绝对基址
+  const h = await import("next/headers").then(m => m.headers());
+  const host = h.get("x-forwarded-host") || h.get("host") || process.env.VERCEL_URL || "";
+  const proto = (h.get("x-forwarded-proto") || "https").split(",")[0];
+  const base = host ? `${proto}://${host}` : (process.env.NEXT_PUBLIC_SITE_URL || "");
   const res = await fetch(`${base}/api/pdp?slug=${encodeURIComponent(params.slug)}`, { cache: "no-store" });
   const data = await res.json();
   if (!data?.ok || !data?.found || !data?.doc) return (
