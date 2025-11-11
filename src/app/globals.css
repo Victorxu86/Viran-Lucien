@@ -203,6 +203,7 @@ a:hover { opacity: .85; }
 
 /* Mobile horizontal nav (no dropdown panels) */
 .nav-mobile {
+  position: relative;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 6px;

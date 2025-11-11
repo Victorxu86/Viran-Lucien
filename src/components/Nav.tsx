@@ -52,6 +52,7 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
   const [open, setOpen] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
   const navRef = useRef<HTMLDivElement | null>(null);
+  const isMobileMode = hidePanels;
 
   const handleOpen = useCallback((key: string | null) => {
     if (timerRef.current) {
@@ -84,9 +85,21 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
     return () => document.removeEventListener("click", onDocClick);
   }, []);
 
+  const handleTopLinkClick = (e: React.MouseEvent, item: NavItem, hasPanel: boolean, isOpen: boolean) => {
+    if (!isMobileMode) return;
+    if (hasPanel) {
+      if (!isOpen) {
+        e.preventDefault();
+        setOpen(item.label);
+      } else {
+        // 第二次点击允许跳转
+      }
+    }
+  };
+
   return (
     <div className={`relative ${hidePanels ? "nav-mobile" : ""}`} ref={navRef}>
-      <ul className="flex items-center gap-6 whitespace-nowrap">
+      <ul className={`flex items-center gap-6 whitespace-nowrap ${isMobileMode ? "justify-center" : ""}`}>
         {[
           {
             label: "Collection",
@@ -147,6 +160,7 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
                 className={`nav-link text-sm ${["Collection","The Materials","Men","Women"].includes(item.label) ? "nav-link--low" : ""}`}
                 onFocus={() => hasPanel && handleOpen(item.label)}
                 onBlur={() => hasPanel && handleOpen(null)}
+                onClick={(e) => handleTopLinkClick(e, item, hasPanel, isOpen)}
                 aria-haspopup={hasPanel ? "menu" : undefined}
                 aria-expanded={isOpen}
               >
@@ -154,7 +168,8 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
                 <span className={`nav-underline ${isOpen ? "is-active" : ""}`} />
               </Link>
 
-              {!hidePanels && hasPanel ? (
+              {/* Desktop dropdown */}
+              {!isMobileMode && hasPanel ? (
                 <div
                   className={`nav-panel ${isOpen ? "is-open" : ""}`}
                   role="menu"
@@ -172,6 +187,26 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
                         </Link>
                       ))}
                     </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {/* Mobile dropdown (tap) */}
+              {isMobileMode && hasPanel && isOpen ? (
+                <div className="nav-panel-mobile" role="menu">
+                  <div className="py-2">
+                    {item.panel!.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="block px-4 py-3 border-t text-sm"
+                        style={{ borderColor: "var(--accent-12)" }}
+                        role="menuitem"
+                        onClick={() => setOpen(null)}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               ) : null}
