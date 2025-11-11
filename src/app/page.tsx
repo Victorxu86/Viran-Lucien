@@ -4,15 +4,17 @@ import Section from "@/components/Section";
 import Grid from "@/components/Grid";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/Button";
+import { fetchHome } from "@/lib/sanity.server";
 
-export default function Home() {
+export default async function Home() {
+  const home = await fetchHome();
   return (
     <>
       {/* Hero */}
       <section className="relative">
         <div className="media-hover media-frame">
           <img
-            src="/hero.svg"
+            src={home?.heroImage?.asset?.url || "/hero.svg"}
             alt="Viran Lucien — Quiet luxury editorial hero"
             className="w-full h-auto"
           />
@@ -43,11 +45,29 @@ export default function Home() {
 
       {/* Featured products */}
       <Section title="Featured" description="精选单品，材质与版型的安静表达。">
-        <Grid cols={3}>
-          <ProductCard title="Single-Color Knit" subtitle="Merino Wool" price="¥2,980" imageSrc="/feature-2.svg" />
-          <ProductCard title="Structured Shirt" subtitle="Egyptian Cotton" price="¥1,980" imageSrc="/feature-3.svg" />
-          <ProductCard title="Minimal Coat" subtitle="Double-Face Wool" price="¥5,980" imageSrc="/feature-1.svg" />
-        </Grid>
+        {home?.featuredProducts && home.featuredProducts.length > 0 ? (
+          <Grid cols={3}>
+            {home.featuredProducts.slice(0, 3).map((p) => (
+              <ProductCard
+                key={p.slug?.current || p._id}
+                title={p.title}
+                subtitle={p.material || ""}
+                price={`¥${p.price || 0}`}
+                imageSrc={p.images?.[0]?.asset?.url || "/feature-2.svg"}
+                secondaryImageSrc={p.images?.[1]?.asset?.url || p.images?.[0]?.asset?.url || "/feature-3.svg"}
+                href={`/product/${p.slug?.current || ""}`}
+              />
+            ))}
+          </Grid>
+        ) : (
+          <>
+            <Grid cols={3}>
+              <ProductCard title="Single-Color Knit" subtitle="Merino Wool" price="¥2,980" imageSrc="/feature-2.svg" />
+              <ProductCard title="Structured Shirt" subtitle="Egyptian Cotton" price="¥1,980" imageSrc="/feature-3.svg" />
+              <ProductCard title="Minimal Coat" subtitle="Double-Face Wool" price="¥5,980" imageSrc="/feature-1.svg" />
+            </Grid>
+          </>
+        )}
         <div className="mt-10">
           <Button asChild href="/collection">查看全部</Button>
         </div>

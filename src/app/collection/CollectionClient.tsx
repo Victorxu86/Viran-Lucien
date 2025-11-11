@@ -3,7 +3,18 @@
 import Container from "@/components/Container";
 import { SERIES } from "@/lib/seriesData";
 
-export default function CollectionClient() {
+type SeriesLite = {
+  slug: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  season?: string;
+  hero?: string;
+  materials?: string[];
+};
+
+export default function CollectionClient({ series }: { series?: SeriesLite[] }) {
+  const data = (series && series.length > 0 ? series : SERIES) as SeriesLite[];
   return (
     <>
       {/* Hero */}
@@ -29,21 +40,21 @@ export default function CollectionClient() {
       </section>
 
       {/* Series Showcase */}
-      {SERIES.map((s, i) => (
+      {data.map((s, i) => (
         <section key={s.slug} className="section">
           <Container>
             <div className={`grid grid-cols-1 gap-10 lg:grid-cols-2 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}>
               <div className="media-frame appear is-in">
-                <img src={s.hero} alt={s.title} className="w-full h-auto" />
+                <img src={s.hero || "/feature-1.svg"} alt={s.title} className="w-full h-auto" />
               </div>
               <div className="flex items-center">
                 <div>
-                  <div className="text-xs text-zinc-600">{s.season}</div>
+                  <div className="text-xs text-zinc-600">{s.season || ""}</div>
                   <h2 className="mt-2 text-2xl font-semibold">{s.title}</h2>
-                  <p className="mt-1 text-sm text-zinc-600">{s.subtitle}</p>
-                  <p className="mt-4 text-sm text-zinc-700 max-w-prose">{s.description}</p>
+                  {s.subtitle ? <p className="mt-1 text-sm text-zinc-600">{s.subtitle}</p> : null}
+                  {s.description ? <p className="mt-4 text-sm text-zinc-700 max-w-prose">{s.description}</p> : null}
                   <div className="mt-4 flex flex-wrap gap-2">
-                    {s.materials.map((m) => (
+                    {(s.materials || []).map((m) => (
                       <span key={m} className="rounded-full border px-3 py-1 text-xs" style={{ borderColor: "var(--accent-12)" }}>
                         {m}
                       </span>
