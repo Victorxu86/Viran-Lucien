@@ -191,29 +191,34 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
                 </div>
               ) : null}
 
-              {/* Mobile dropdown (tap) */}
-              {isMobileMode && hasPanel && isOpen ? (
-                <div className="nav-panel-mobile" role="menu">
-                  <div className="py-2">
-                    {item.panel!.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="block px-4 py-3 border-t text-sm"
-                        style={{ borderColor: "var(--accent-12)" }}
-                        role="menuitem"
-                        onClick={() => setOpen(null)}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
+              {/* Mobile floating dropdown handled globally below */}
             </li>
           );
         })}
       </ul>
+      {/* Mobile: global floating dropdown + backdrop */}
+      {isMobileMode && open && (
+        <>
+          <button aria-label="Close menu" className="nav-backdrop" onClick={() => setOpen(null)} />
+          <div className="nav-panel-mobile" role="menu">
+            <div className="nav-mobile-title">{open}</div>
+            <div className="py-1">
+              {(NAV_ITEMS.find((n) => n.label === open)?.panel || []).map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="block px-4 py-3 border-b text-sm"
+                  style={{ borderColor: "var(--accent-12)" }}
+                  role="menuitem"
+                  onClick={() => setOpen(null)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
