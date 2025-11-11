@@ -210,6 +210,20 @@ a:hover { opacity: .85; }
 }
 .nav-mobile::-webkit-scrollbar { display: none; }
 
+/* Mobile floating dropdown panel (overlay, not expanding header) */
+.nav-panel-mobile {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%) translateY(8px);
+  min-width: 280px;
+  background: var(--background);
+  border: 1px solid var(--accent-12);
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  z-index: 70;
+}
+
 /* Carousel viewport/track */
 .announce-viewport {
   position: relative;
