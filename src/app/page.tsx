@@ -56,7 +56,7 @@ export default async function Home() {
                 imageSrc={p.images?.[0]?.asset?.url || "/feature-2.svg"}
                 secondaryImageSrc={p.images?.[1]?.asset?.url || p.images?.[0]?.asset?.url || "/feature-3.svg"}
                 href={`/product/${p.slug?.current || ""}`}
-              />
+            />
             ))}
           </Grid>
         ) : (
@@ -82,7 +82,7 @@ export default async function Home() {
           <Button asChild href="/lookbook" variant="text">
             浏览 Lookbook
           </Button>
-        </div>
+    </div>
       </Section>
     </>
   );

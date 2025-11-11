@@ -82,7 +82,7 @@ const productListQuery = groq`*[_type == "product"]{
   "images": coalesce(images[]{ asset->{url} }, [])
 } | order(_createdAt desc)[0...$limit]`;
 
-const productBySlugQuery = groq`*[_type == "product" && lower(slug.current) == lower($slug)][0]{
+const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0]{
   _id,
   title,
   slug,
@@ -120,10 +120,7 @@ export async function fetchProducts(params: { gender?: "men" | "women"; category
 
 export async function fetchProductBySlug(slug: string): Promise<ProductDetailDoc | null> {
   try {
-    const normalized = decodeURIComponent(String(slug || ""))
-      .trim()
-      .replace(/^\/+|\/+$/g, "");
-    const doc = await sanityClient.fetch<ProductDetailDoc>(productBySlugQuery, { slug: normalized });
+    const doc = await sanityClient.fetch<ProductDetailDoc>(productBySlugQuery, { slug });
     return doc || null;
   } catch {
     return null;
