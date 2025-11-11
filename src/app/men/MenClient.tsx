@@ -30,7 +30,7 @@ const BASE_PRODUCTS: Product[] = [
   { slug: "classic-trouser", title: "Classic Trouser", material: "Virgin Wool", price: 2680, category: "bottoms", image: "/feature-2.svg", imageAlt: "Trouser" },
 ];
 
-const PRODUCTS: Product[] = Array.from({ length: 40 }).map((_, i) => {
+const FALLBACK_PRODUCTS: Product[] = Array.from({ length: 40 }).map((_, i) => {
   const base = BASE_PRODUCTS[i % BASE_PRODUCTS.length];
   const idx = i + 1;
   return {
@@ -41,13 +41,14 @@ const PRODUCTS: Product[] = Array.from({ length: 40 }).map((_, i) => {
   };
 });
 
-export default function MenClient() {
+export default function MenClient({ initialProducts }: { initialProducts?: Product[] }) {
   const router = useRouter();
   const params = useSearchParams();
   const [cat, setCat] = useState<Category>((params.get("cat") as Category) || "all");
   const [sort, setSort] = useState<Sort>((params.get("sort") as Sort) || "newest");
   const [visible, setVisible] = useState<number>(8);
   const appearRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const data: Product[] = initialProducts && initialProducts.length > 0 ? initialProducts : FALLBACK_PRODUCTS;
 
   useEffect(() => {
     const sp = new URLSearchParams(params.toString());
@@ -58,7 +59,7 @@ export default function MenClient() {
   }, [cat, sort]);
 
   const filtered = useMemo(() => {
-    let list = PRODUCTS.filter((p) => (cat === "all" ? true : p.category === cat));
+    let list = data.filter((p) => (cat === "all" ? true : p.category === cat));
     if (sort === "newest") {
       list = list.slice().reverse();
     } else if (sort === "price-asc") {
@@ -67,7 +68,7 @@ export default function MenClient() {
       list = list.slice().sort((a, b) => b.price - a.price);
     }
     return list;
-  }, [cat, sort]);
+  }, [cat, sort, data]);
 
   const visibleList = useMemo(() => filtered.slice(0, visible), [filtered, visible]);
 
