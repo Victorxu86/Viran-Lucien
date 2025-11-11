@@ -10,10 +10,20 @@ type Props = { params: { slug: string } };
 export const dynamic = "force-dynamic";
 
 export default async function ProductDetailPage({ params }: Props) {
-  const doc = await fetchProductBySlug(params.slug);
-  if (!doc) {
-    notFound();
+  let doc = await fetchProductBySlug(params.slug);
+  if (!doc && params.slug) {
+    // 再尝试一次小写 slug（规避大小写/空白异常）
+    doc = await fetchProductBySlug(params.slug.toLowerCase());
   }
+  if (!doc) return (
+    <section className="section">
+      <Container>
+        <div className="py-24 text-center text-sm text-zinc-600">
+          未找到该产品：{params.slug}
+        </div>
+      </Container>
+    </section>
+  );
   const images = (doc.images || [])
     .map((i) => i?.asset?.url)
     .filter((u): u is string => !!u);
