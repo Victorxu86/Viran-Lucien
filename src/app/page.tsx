@@ -17,17 +17,6 @@ export default function Home() {
             className="w-full h-auto"
           />
         </div>
-        <Container className="py-12">
-          <p className="mt-6 max-w-2xl">
-            材质先行，结构克制。以单色体系呈现安静而自信的现代风格。
-          </p>
-          <nav className="mt-8 flex gap-6">
-            <Button asChild href="/collection">浏览系列</Button>
-            <Button asChild href="/the-material" variant="text">
-              材质理念
-            </Button>
-          </nav>
-        </Container>
       </section>
 
       {/* Material narrative */}
