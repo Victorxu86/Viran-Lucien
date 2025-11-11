@@ -1,5 +1,6 @@
 import Container from "@/components/Container";
 import Nav from "@/components/Nav";
+import MobileNav from "@/components/MobileNav";
 import AnnouncementBar from "@/components/AnnouncementBar";
 
 export default function Header() {
@@ -10,7 +11,7 @@ export default function Header() {
     >
       {/* 顶部小广播条（轮播 + 滚动收起） */}
       <AnnouncementBar />
-      <Container className="py-4">
+      <Container className="py-4 relative">
         {/* 顶部行：品牌名居中 */}
         <div className="relative flex items-center justify-center">
           <a href="/" className="brand-mark">
@@ -23,7 +24,7 @@ export default function Header() {
             <span className="brand-deco-line w-20" />
           </div>
           {/* 右侧用户与购物袋图标 */}
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-4">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-4">
             <a href="/account" aria-label="Account" className="icon-link">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5"/>
@@ -37,6 +38,10 @@ export default function Header() {
                 <circle cx="18" cy="20" r="1" fill="currentColor"/>
               </svg>
             </a>
+          </div>
+          {/* Mobile hamburger */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 sm:hidden">
+            <MobileNav />
           </div>
         </div>
         {/* 下方一排：导航居中 */}

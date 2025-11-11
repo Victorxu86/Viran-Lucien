@@ -188,6 +188,19 @@ a:hover { opacity: .85; }
 .announce-arrow.left { left: 0; }
 .announce-arrow.right { right: 0; }
 
+/* Mobile nav */
+.mobile-nav-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  background: var(--background);
+  border: 1px solid var(--accent-12);
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  z-index: 60;
+}
+
 /* Carousel viewport/track */
 .announce-viewport {
   position: relative;
