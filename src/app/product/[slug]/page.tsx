@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import { fetchProductBySlug, fetchProducts } from "@/lib/sanity.server";
 import Gallery from "@/components/Gallery";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 type Props = { params: { slug: string } };
 
@@ -11,21 +12,14 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export default async function ProductDetailPage({ params }: Props) {
-  let doc = await fetchProductBySlug(params.slug);
-  if (!doc && params.slug) {
-    // 再尝试一次小写 slug（规避大小写/空白异常）
-    doc = await fetchProductBySlug(params.slug.toLowerCase());
-  }
-  if (!doc) {
-    // 兜底：拉取列表再匹配 slug（防止某些编码/大小写问题）
-    const all = await fetchProducts({ limit: 120 });
-    const normalized = decodeURIComponent(String(params.slug || "")).trim().toLowerCase();
-    const hit = (all || []).find((p) => (p.slug?.current || "").toLowerCase() === normalized);
-    if (hit?.slug?.current) {
-      doc = await fetchProductBySlug(hit.slug.current);
-    }
-  }
-  if (!doc) return (
+  // 统一走 API 路由，避免环境差异
+  const h = headers();
+  const host = h.get("x-forwarded-host") || h.get("host") || "";
+  const proto = (h.get("x-forwarded-proto") || "https").split(",")[0];
+  const base = host ? `${proto}://${host}` : "";
+  const res = await fetch(`${base}/api/pdp?slug=${encodeURIComponent(params.slug)}`, { cache: "no-store" });
+  const data = await res.json();
+  if (!data?.ok || !data?.found || !data?.doc) return (
     <section className="section">
       <Container>
         <div className="py-24 text-center text-sm text-zinc-600">
@@ -34,23 +28,20 @@ export default async function ProductDetailPage({ params }: Props) {
       </Container>
     </section>
   );
-  const images = (doc.images || [])
-    .map((i) => i?.asset?.url)
-    .filter((u): u is string => !!u);
-  const galleryImages = images.length > 0 ? images : ["/feature-1.svg"];
-  const priceText = `¥${doc.price || 0}`;
-  const related = (doc.related || []).map((r) => {
-    const rImg = (r.images || []).map((i) => i?.asset?.url).find(Boolean) || "/feature-2.svg";
-    const slug = r.slug?.current || "";
-    return {
-      slug,
-      title: r.title,
-      material: r.material || "",
-      price: r.price || 0,
-      image: rImg,
-      category: (r.category || "").toLowerCase(),
-    };
-  });
+  const product = data.doc as {
+    title: string;
+    material: string;
+    price: number;
+    category: string;
+    images: string[];
+    sizes: Array<{ label: string; available: boolean }>;
+    craftsmanship: string[];
+    description: string;
+    related: Array<{ slug: string; title: string; material: string; price: number; image: string; category: string }>;
+  };
+  const galleryImages = product.images;
+  const priceText = `¥${product.price}`;
+  const related = product.related;
 
   return (
     <section className="section">
@@ -63,15 +54,15 @@ export default async function ProductDetailPage({ params }: Props) {
 
           {/* 右：信息区 */}
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">{doc.title}</h1>
-            <p className="mt-2 text-sm text-zinc-700">{doc.material || ""}</p>
+            <h1 className="text-3xl font-semibold tracking-tight">{product.title}</h1>
+            <p className="mt-2 text-sm text-zinc-700">{product.material || ""}</p>
             <div className="mt-4 text-lg">{priceText}</div>
 
             {/* 尺码与数量 */}
             <div className="mt-6">
               <div className="text-sm text-zinc-700">选择尺码</div>
               <div className="mt-3 flex flex-wrap gap-2">
-                {(doc.sizes || []).map((s) => (
+                {product.sizes.map((s) => (
                   <button
                     key={s.label || ""}
                     className="h-9 min-w-[44px] rounded-sm border px-3 text-sm disabled:opacity-40"
@@ -101,7 +92,7 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="mt-10">
               <h2 className="text-base">Craftsmanship</h2>
               <ul className="mt-3 list-disc pl-5 text-sm text-zinc-700">
-                {(doc.craftsmanship || []).map((h) => (
+                {product.craftsmanship.map((h: string) => (
                   <li key={h as string}>{h}</li>
                 ))}
               </ul>
@@ -110,7 +101,7 @@ export default async function ProductDetailPage({ params }: Props) {
             {/* 描述 */}
             <div className="mt-8">
               <h2 className="text-base">Description</h2>
-              <p className="mt-3 text-sm text-zinc-700">{doc.description || ""}</p>
+              <p className="mt-3 text-sm text-zinc-700">{product.description || ""}</p>
             </div>
 
             {/* 售后与配送信息入口 */}
@@ -154,7 +145,7 @@ export default async function ProductDetailPage({ params }: Props) {
           {/* 同类型推荐一行 */}
           <div className="mt-8">
             <Grid cols={4} className="md:grid-cols-3">
-              {related.filter((r) => r.category === (doc.category || "").toLowerCase()).slice(0, 4).map((r, i) => (
+              {related.filter((r) => r.category === product.category).slice(0, 4).map((r, i) => (
                 <ProductCard
                   key={`same-${r.slug || i}`}
                   title={r.title}
