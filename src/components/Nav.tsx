@@ -151,15 +151,15 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
           return (
             <li
               key={item.label}
-              onMouseEnter={() => hasPanel && handleOpen(item.label)}
-              onMouseLeave={() => hasPanel && handleOpen(null)}
+              onMouseEnter={isMobileMode ? undefined : (() => hasPanel && handleOpen(item.label))}
+              onMouseLeave={isMobileMode ? undefined : (() => hasPanel && handleOpen(null))}
               className="relative"
             >
               <Link
                 href={item.href}
                 className={`nav-link text-sm ${["Collection","The Materials","Men","Women"].includes(item.label) ? "nav-link--low" : ""}`}
-                onFocus={() => hasPanel && handleOpen(item.label)}
-                onBlur={() => hasPanel && handleOpen(null)}
+                onFocus={isMobileMode ? undefined : (() => hasPanel && handleOpen(item.label))}
+                onBlur={isMobileMode ? undefined : (() => hasPanel && handleOpen(null))}
                 onClick={(e) => handleTopLinkClick(e, item, hasPanel, isOpen)}
                 aria-haspopup={hasPanel ? "menu" : undefined}
                 aria-expanded={isOpen}
