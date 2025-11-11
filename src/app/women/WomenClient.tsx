@@ -19,28 +19,6 @@ type Product = {
   imageAlt: string;
 };
 
-const BASE_PRODUCTS: Product[] = [
-  { slug: "mono-knit", title: "Mono Knit", material: "Cashmere", price: 3280, category: "tops", image: "/feature-2.svg", imageAlt: "Knitwear" },
-  { slug: "soft-shirt", title: "Soft Shirt", material: "Silk Cotton", price: 2380, category: "tops", image: "/feature-3.svg", imageAlt: "Shirt" },
-  { slug: "minimal-coat-w", title: "Minimal Coat", material: "Wool-Cashmere", price: 6280, category: "outerwear", image: "/feature-1.svg", imageAlt: "Coat" },
-  { slug: "tailored-skirt", title: "Tailored Skirt", material: "Wool Blend", price: 2480, category: "bottoms", image: "/feature-3.svg", imageAlt: "Skirt" },
-  { slug: "cardigan-light", title: "Cardigan Light", material: "Merino Wool", price: 3580, category: "tops", image: "/feature-2.svg", imageAlt: "Cardigan" },
-  { slug: "trench", title: "Trench", material: "Cotton Gabardine", price: 4680, category: "outerwear", image: "/feature-1.svg", imageAlt: "Trench" },
-  { slug: "linen-top", title: "Linen Top", material: "Pure Linen", price: 1780, category: "tops", image: "/feature-3.svg", imageAlt: "Linen Top" },
-  { slug: "classic-trouser-w", title: "Classic Trouser", material: "Virgin Wool", price: 2780, category: "bottoms", image: "/feature-2.svg", imageAlt: "Trouser" },
-];
-
-const PRODUCTS: Product[] = Array.from({ length: 40 }).map((_, i) => {
-  const base = BASE_PRODUCTS[i % BASE_PRODUCTS.length];
-  const idx = i + 1;
-  return {
-    ...base,
-    slug: `${base.slug}-${idx}`,
-    title: `${base.title} ${idx}`,
-    price: base.price + (idx % 7) * 50,
-  };
-});
-
 export default function WomenClient({ initialProducts }: { initialProducts?: Product[] }) {
   const router = useRouter();
   const params = useSearchParams();
@@ -48,7 +26,7 @@ export default function WomenClient({ initialProducts }: { initialProducts?: Pro
   const [sort, setSort] = useState<Sort>((params.get("sort") as Sort) || "newest");
   const [visible, setVisible] = useState<number>(8);
   const appearRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const data: Product[] = initialProducts && initialProducts.length > 0 ? initialProducts : PRODUCTS;
+  const data: Product[] = Array.isArray(initialProducts) ? initialProducts : [];
 
   useEffect(() => {
     const sp = new URLSearchParams(params.toString());
@@ -131,25 +109,29 @@ export default function WomenClient({ initialProducts }: { initialProducts?: Pro
         </header>
 
         <div className="mt-10">
-          <Grid cols={4} className="md:grid-cols-3">
-            {visibleList.map((p, idx) => (
-              <div
-                key={p.slug}
-                className="appear"
-                ref={setRefAt(idx)}
-                style={{ transitionDelay: `${(idx % 12) * 40}ms` }}
-              >
-                <ProductCard
-                  title={p.title}
-                  subtitle={p.material}
-                  price={`¥${p.price}`}
-                  imageSrc={p.image}
-                  secondaryImageSrc={p.image}
-                  href={`/product/${p.slug}`}
-                />
-              </div>
-            ))}
-          </Grid>
+          {visibleList.length > 0 ? (
+            <Grid cols={4} className="md:grid-cols-3">
+              {visibleList.map((p, idx) => (
+                <div
+                  key={p.slug}
+                  className="appear"
+                  ref={setRefAt(idx)}
+                  style={{ transitionDelay: `${(idx % 12) * 40}ms` }}
+                >
+                  <ProductCard
+                    title={p.title}
+                    subtitle={p.material}
+                    price={`¥${p.price}`}
+                    imageSrc={p.image}
+                    secondaryImageSrc={p.image}
+                    href={`/product/${p.slug}`}
+                  />
+                </div>
+              ))}
+            </Grid>
+          ) : (
+            <div className="py-24 text-center text-sm text-zinc-600">暂无产品</div>
+          )}
           {visible < filtered.length ? (
             <div className="mt-10 flex justify-center">
               <button

@@ -19,28 +19,6 @@ type Product = {
   imageAlt: string;
 };
 
-const BASE_PRODUCTS: Product[] = [
-  { slug: "single-color-knit", title: "Single-Color Knit", material: "Merino Wool", price: 2980, category: "tops", image: "/feature-2.svg", imageAlt: "Knitwear" },
-  { slug: "structured-shirt", title: "Structured Shirt", material: "Egyptian Cotton", price: 1980, category: "tops", image: "/feature-3.svg", imageAlt: "Shirt" },
-  { slug: "minimal-coat", title: "Minimal Coat", material: "Double-Face Wool", price: 5980, category: "outerwear", image: "/feature-1.svg", imageAlt: "Coat" },
-  { slug: "tailored-pants", title: "Tailored Pants", material: "Wool Blend", price: 2280, category: "bottoms", image: "/feature-3.svg", imageAlt: "Pants" },
-  { slug: "soft-cardigan", title: "Soft Cardigan", material: "Cashmere", price: 4280, category: "tops", image: "/feature-2.svg", imageAlt: "Cardigan" },
-  { slug: "field-jacket", title: "Field Jacket", material: "Cotton Twill", price: 3580, category: "outerwear", image: "/feature-1.svg", imageAlt: "Jacket" },
-  { slug: "linen-shirt", title: "Linen Shirt", material: "Pure Linen", price: 1680, category: "tops", image: "/feature-3.svg", imageAlt: "Linen Shirt" },
-  { slug: "classic-trouser", title: "Classic Trouser", material: "Virgin Wool", price: 2680, category: "bottoms", image: "/feature-2.svg", imageAlt: "Trouser" },
-];
-
-const FALLBACK_PRODUCTS: Product[] = Array.from({ length: 40 }).map((_, i) => {
-  const base = BASE_PRODUCTS[i % BASE_PRODUCTS.length];
-  const idx = i + 1;
-  return {
-    ...base,
-    slug: `${base.slug}-${idx}`,
-    title: `${base.title} ${idx}`,
-    price: base.price + (idx % 7) * 50,
-  };
-});
-
 export default function MenClient({ initialProducts }: { initialProducts?: Product[] }) {
   const router = useRouter();
   const params = useSearchParams();
@@ -48,7 +26,7 @@ export default function MenClient({ initialProducts }: { initialProducts?: Produ
   const [sort, setSort] = useState<Sort>((params.get("sort") as Sort) || "newest");
   const [visible, setVisible] = useState<number>(8);
   const appearRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const data: Product[] = initialProducts && initialProducts.length > 0 ? initialProducts : FALLBACK_PRODUCTS;
+  const data: Product[] = Array.isArray(initialProducts) ? initialProducts : [];
 
   useEffect(() => {
     const sp = new URLSearchParams(params.toString());
@@ -131,25 +109,29 @@ export default function MenClient({ initialProducts }: { initialProducts?: Produ
         </header>
 
         <div className="mt-10">
-          <Grid cols={4} className="md:grid-cols-3">
-            {visibleList.map((p, idx) => (
-              <div
-                key={p.slug}
-                className="appear"
-                ref={setRefAt(idx)}
-                style={{ transitionDelay: `${(idx % 12) * 40}ms` }}
-              >
-                <ProductCard
-                  title={p.title}
-                  subtitle={p.material}
-                  price={`¥${p.price.toLocaleString()}`}
-                  imageSrc={p.image}
-                  secondaryImageSrc={p.image}
-                  href={`/product/${p.slug}`}
-                />
-              </div>
-            ))}
-          </Grid>
+          {visibleList.length > 0 ? (
+            <Grid cols={4} className="md:grid-cols-3">
+              {visibleList.map((p, idx) => (
+                <div
+                  key={p.slug}
+                  className="appear"
+                  ref={setRefAt(idx)}
+                  style={{ transitionDelay: `${(idx % 12) * 40}ms` }}
+                >
+                  <ProductCard
+                    title={p.title}
+                    subtitle={p.material}
+                    price={`¥${p.price.toLocaleString()}`}
+                    imageSrc={p.image}
+                    secondaryImageSrc={p.image}
+                    href={`/product/${p.slug}`}
+                  />
+                </div>
+              ))}
+            </Grid>
+          ) : (
+            <div className="py-24 text-center text-sm text-zinc-600">暂无产品</div>
+          )}
           {visible < filtered.length ? (
             <div className="mt-10 flex justify-center">
               <button
