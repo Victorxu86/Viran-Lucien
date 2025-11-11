@@ -18,6 +18,16 @@ export default async function ProductDetailPage({ params, searchParams }: Props 
       <Container>
         <div className="py-24 text-center text-sm text-zinc-600">
           未找到该产品：{params.slug}
+          <div className="mt-3">
+            <a
+              className="underline hover:opacity-80"
+              href={`/api/diag?slug=${encodeURIComponent(params.slug)}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              诊断链接（当前 slug）
+            </a>
+          </div>
         </div>
       </Container>
     </section>
