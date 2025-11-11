@@ -2,7 +2,7 @@ import "server-only";
 import { createClient } from "@sanity/client";
 import groq from "groq";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "gidffpzl";
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 const apiVersion = "2024-07-01";
 
