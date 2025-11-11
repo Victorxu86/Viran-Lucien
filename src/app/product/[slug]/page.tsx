@@ -9,8 +9,9 @@ type Props = { params: { slug: string } };
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
-export default async function ProductDetailPage({ params }: Props) {
+export default async function ProductDetailPage({ params, searchParams }: Props & { searchParams?: Record<string, string> }) {
   const product = await loadPdpBySlug(params.slug);
   if (!product) return (
     <section className="section">
@@ -28,6 +29,14 @@ export default async function ProductDetailPage({ params }: Props) {
   return (
     <section className="section">
       <Container>
+        {searchParams?.debug === "1" ? (
+          <div className="mb-6 rounded-sm border p-3 text-xs" style={{ borderColor: "var(--accent-12)" }}>
+            <div>debug: slug={params.slug}</div>
+            <div>debug: title={product.title}</div>
+            <div>debug: category={product.category}</div>
+            <div>debug: images={String(galleryImages.length)}</div>
+          </div>
+        ) : null}
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           {/* 左：图像展示 */}
           <div className="space-y-6">
