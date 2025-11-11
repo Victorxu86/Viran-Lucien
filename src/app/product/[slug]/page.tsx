@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 type Props = { params: { slug: string } };
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export default async function ProductDetailPage({ params }: Props) {
   let doc = await fetchProductBySlug(params.slug);
