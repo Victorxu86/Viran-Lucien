@@ -201,6 +201,14 @@ a:hover { opacity: .85; }
   z-index: 60;
 }
 
+/* Mobile horizontal nav (no dropdown panels) */
+.nav-mobile {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 6px;
+}
+.nav-mobile::-webkit-scrollbar { display: none; }
+
 /* Carousel viewport/track */
 .announce-viewport {
   position: relative;

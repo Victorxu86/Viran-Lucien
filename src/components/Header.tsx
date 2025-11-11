@@ -1,6 +1,5 @@
 import Container from "@/components/Container";
 import Nav from "@/components/Nav";
-import MobileNav from "@/components/MobileNav";
 import AnnouncementBar from "@/components/AnnouncementBar";
 
 export default function Header() {
@@ -24,7 +23,7 @@ export default function Header() {
             <span className="brand-deco-line w-20" />
           </div>
           {/* 右侧用户与购物袋图标 */}
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-4">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-4">
             <a href="/account" aria-label="Account" className="icon-link">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5"/>
@@ -39,14 +38,14 @@ export default function Header() {
               </svg>
             </a>
           </div>
-          {/* Mobile hamburger */}
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 sm:hidden">
-            <MobileNav />
-          </div>
         </div>
-        {/* 下方一排：导航居中 */}
+        {/* 下方一排：导航居中（桌面） */}
         <div className="mt-3 hidden sm:flex items-center justify-center">
           <Nav />
+        </div>
+        {/* 移动端：还原为同类导航（横向滚动） */}
+        <div className="mt-2 sm:hidden">
+          <Nav hidePanels />
         </div>
       </Container>
     </header>

@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type NavItem = {
+export type NavItem = {
   label: string;
   href: string;
   panel?: Array<{ label: string; href: string }>;
 };
 
-const NAV_ITEMS: NavItem[] = [
+export const NAV_ITEMS: NavItem[] = [
   {
     label: "Collection",
     href: "/collection",
@@ -48,7 +48,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Cart", href: "/cart" },
 ];
 
-export default function Nav() {
+export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
   const [open, setOpen] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
   const navRef = useRef<HTMLDivElement | null>(null);
@@ -85,8 +85,8 @@ export default function Nav() {
   }, []);
 
   return (
-    <div className="relative" ref={navRef}>
-      <ul className="flex items-center gap-6">
+    <div className={`relative ${hidePanels ? "nav-mobile" : ""}`} ref={navRef}>
+      <ul className="flex items-center gap-6 whitespace-nowrap">
         {[
           {
             label: "Collection",
@@ -154,7 +154,7 @@ export default function Nav() {
                 <span className={`nav-underline ${isOpen ? "is-active" : ""}`} />
               </Link>
 
-              {hasPanel ? (
+              {!hidePanels && hasPanel ? (
                 <div
                   className={`nav-panel ${isOpen ? "is-open" : ""}`}
                   role="menu"
