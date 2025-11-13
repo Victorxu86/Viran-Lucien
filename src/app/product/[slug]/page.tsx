@@ -1,41 +1,45 @@
 import Container from "@/components/Container";
 import Grid from "@/components/Grid";
 import ProductCard from "@/components/ProductCard";
-import { fetchProductBySlugRobust as fetchProductBySlug, fetchProducts } from "@/lib/sanity.server";
+import { fetchProductBySlug } from "@/lib/sanity.server";
 import Gallery from "@/components/Gallery";
-import Link from "next/link";
-import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-type Props = { params: { slug: string } };
+type ParamsInput = { slug?: string } | Promise<{ slug?: string }>;
+type Props = { params: ParamsInput };
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 
 export default async function ProductDetailPage({ params }: Props) {
-  const rawSlug = params.slug;
-  const doc = await fetchProductBySlug(rawSlug);
-  const d = doc || {
-    title: "未找到该商品",
-    material: "",
-    price: 0,
-    images: [] as Array<{ asset?: { url?: string } }>,
-    category: "",
-    gender: "men" as const,
-    sizes: [] as Array<{ label: string; available?: boolean }>,
-    craftsmanship: [] as string[],
-    description: "",
-    related: [] as any[],
-  };
-  const images = (d.images || [])
+  const resolvedParams =
+    params && typeof (params as any).then === "function"
+      ? await (params as Promise<{ slug?: string }>)
+      : (params as { slug?: string });
+
+  const slug = resolvedParams?.slug;
+  if (!slug || typeof slug !== "string") {
+    console.error("[PDP] missing slug param", resolvedParams);
+    notFound();
+  }
+
+  const doc = await fetchProductBySlug(slug);
+  if (!doc) {
+    console.warn("[PDP] product not found", slug);
+    notFound();
+  }
+  console.log("[PDP] render", {
+    slug,
+    title: doc.title,
+    hasImages: Array.isArray(doc.images) && doc.images.length > 0,
+    hasRelated: Array.isArray(doc.related) && doc.related.length > 0,
+  });
+  const images = (doc.images || [])
     .map((i) => i?.asset?.url)
     .filter((u): u is string => !!u);
   const galleryImages = images.length > 0 ? images : ["/feature-1.svg"];
-  const priceText = `¥${d.price || 0}`;
-  const related = (d.related || []).map((r: any) => {
-    const rImg =
-      (r.images || [])
-        .map((i: { asset?: { url?: string } }) => i?.asset?.url)
-        .find(Boolean) || "/feature-2.svg";
+  const priceText = `¥${doc.price || 0}`;
+  const related = (doc.related || []).map((r) => {
+    const rImg = (r.images || []).map((i) => i?.asset?.url).find(Boolean) || "/feature-2.svg";
     const slug = r.slug?.current || "";
     return {
       slug,
@@ -47,70 +51,9 @@ export default async function ProductDetailPage({ params }: Props) {
     };
   });
 
-  // 计算面包屑与回链
-  const gender = (d.gender || "").toLowerCase();
-  const plpPath = gender === "women" ? "/women" : "/men";
-  const mapCategory = (src?: string) => {
-    const s = (src || "").toLowerCase();
-    if (s.includes("outer")) return "outerwear";
-    if (s.includes("bottom") || s.includes("pant") || s.includes("skirt")) return "bottoms";
-    // Knitwear、Tops 都归并 tops
-    return "tops";
-  };
-  const categoryParam = mapCategory(d.category);
-
-  // 精准排查：当 doc 缺失时检查列表是否能命中同 slug
-  let debugHit = false;
-  if (!doc) {
-    const pool = await fetchProducts({ limit: 200 });
-    debugHit = (pool || []).some((p) => (p.slug?.current || "").toLowerCase() === rawSlug.toLowerCase());
-  }
-
-  // 若无 related，则回退到同性别同类目的最新产品（排除自身）
-  let fallbackRelated: Array<{
-    slug: string;
-    title: string;
-    material: string;
-    price: number;
-    image: string;
-    category: string;
-  }> = [];
-  if (related.length === 0) {
-    const pool = await fetchProducts({ gender: gender === "women" ? "women" : "men", limit: 40 });
-    fallbackRelated = (pool || [])
-      .map((d) => {
-        const slug = d.slug?.current || "";
-        const firstImage = d.images?.[0]?.asset?.url || "/feature-2.svg";
-        return {
-          slug,
-          title: d.title,
-          material: d.material || "",
-          price: d.price || 0,
-          image: firstImage,
-          category: mapCategory(d.category),
-        };
-      })
-      .filter((r) => r.slug && r.slug !== params.slug)
-      .filter((r) => r.category === categoryParam)
-      .slice(0, 8);
-  }
-  const relatedToShow = related.length > 0 ? related : fallbackRelated;
-
   return (
     <section className="section">
       <Container>
-        {/* 面包屑 */}
-        <nav className="mb-6 text-sm text-zinc-600">
-          <Link href="/" className="hover:opacity-80">Home</Link>
-          <span className="mx-2">/</span>
-          <Link href={plpPath} className="hover:opacity-80">{gender === "women" ? "Women" : "Men"}</Link>
-          <span className="mx-2">/</span>
-          <Link href={`${plpPath}?cat=${categoryParam}`} className="hover:opacity-80">
-            {categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)}
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-zinc-800">{d.title}</span>
-        </nav>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           {/* 左：图像展示 */}
           <div className="space-y-6">
@@ -119,23 +62,15 @@ export default async function ProductDetailPage({ params }: Props) {
 
           {/* 右：信息区 */}
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">{d.title}</h1>
-            <p className="mt-2 text-sm text-zinc-700">{d.material || ""}</p>
+            <h1 className="text-3xl font-semibold tracking-tight">{doc.title}</h1>
+            <p className="mt-2 text-sm text-zinc-700">{doc.material || ""}</p>
             <div className="mt-4 text-lg">{priceText}</div>
-            {!doc ? (
-              <div className="mt-4 text-sm text-zinc-600">
-                未找到该商品，请返回列表或稍后再试。
-                <div className="mt-2 text-xs text-zinc-500">
-                  调试：slug="{rawSlug}", 列表命中={String(debugHit)}
-                </div>
-              </div>
-            ) : null}
 
             {/* 尺码与数量 */}
             <div className="mt-6">
               <div className="text-sm text-zinc-700">选择尺码</div>
               <div className="mt-3 flex flex-wrap gap-2">
-                {(d.sizes || []).map((s) => (
+                {(doc.sizes || []).map((s) => (
                   <button
                     key={s.label || ""}
                     className="h-9 min-w-[44px] rounded-sm border px-3 text-sm disabled:opacity-40"
@@ -165,7 +100,7 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="mt-10">
               <h2 className="text-base">Craftsmanship</h2>
               <ul className="mt-3 list-disc pl-5 text-sm text-zinc-700">
-                {(d.craftsmanship || []).map((h) => (
+                {(doc.craftsmanship || []).map((h) => (
                   <li key={h as string}>{h}</li>
                 ))}
               </ul>
@@ -174,7 +109,7 @@ export default async function ProductDetailPage({ params }: Props) {
             {/* 描述 */}
             <div className="mt-8">
               <h2 className="text-base">Description</h2>
-              <p className="mt-3 text-sm text-zinc-700">{d.description || ""}</p>
+              <p className="mt-3 text-sm text-zinc-700">{doc.description || ""}</p>
             </div>
 
             {/* 售后与配送信息入口 */}
@@ -202,7 +137,7 @@ export default async function ProductDetailPage({ params }: Props) {
           <h2 className="text-base">You may also like</h2>
           <div className="mt-6">
             <Grid cols={4} className="md:grid-cols-3">
-              {relatedToShow.slice(0, 4).map((r, idx) => (
+              {related.slice(0, 4).map((r, idx) => (
                 <ProductCard
                   key={r.slug || idx}
                   title={r.title}
@@ -218,10 +153,7 @@ export default async function ProductDetailPage({ params }: Props) {
           {/* 同类型推荐一行 */}
           <div className="mt-8">
             <Grid cols={4} className="md:grid-cols-3">
-              {relatedToShow
-                .filter((r) => r.category === categoryParam)
-                .slice(0, 4)
-                .map((r, i) => (
+              {related.filter((r) => r.category === (doc.category || "").toLowerCase()).slice(0, 4).map((r, i) => (
                 <ProductCard
                   key={`same-${r.slug || i}`}
                   title={r.title}
@@ -238,30 +170,6 @@ export default async function ProductDetailPage({ params }: Props) {
       </Container>
     </section>
   );
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const doc = await fetchProductBySlug(params.slug);
-  if (!doc) {
-    return {
-      title: "Product",
-    };
-  }
-  const title = doc.title || "Product";
-  const description =
-    doc.description ||
-    `${doc.material || ""} · Quiet, restrained and material-first design by Viran Lucien.`;
-  const images = (doc.images || []).map((i) => i?.asset?.url).filter(Boolean) as string[];
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: images.length ? images.slice(0, 1) : undefined,
-      type: "website",
-    },
-  };
 }
 
 
