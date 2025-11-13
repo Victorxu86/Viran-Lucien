@@ -10,6 +10,7 @@ import type { Metadata } from "next";
 type Props = { params: { slug: string } };
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export default async function ProductDetailPage({ params }: Props) {
   const doc = await fetchProductBySlug(params.slug);
