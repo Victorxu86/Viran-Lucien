@@ -9,6 +9,12 @@ export async function GET(request: Request) {
   const gender = searchParams.get("gender") as "men" | "women" | null;
   const category = searchParams.get("category");
 
+  const queryParams: Record<string, unknown> = {
+    gender: gender ?? undefined,
+    category: category ?? undefined,
+    limit: Number(searchParams.get("limit") || 40),
+  };
+
   try {
     const data = await fetchProducts({
       gender: gender ?? undefined,
@@ -29,6 +35,7 @@ export async function GET(request: Request) {
       {
         error: (error as Error).message,
         stack: (error as Error).stack,
+        queryParams,
       },
       { status: 500 }
     );
