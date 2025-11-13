@@ -12,7 +12,8 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export default async function ProductDetailPage({ params }: Props) {
-  const doc = await fetchProductBySlug(params.slug);
+  const rawSlug = params.slug;
+  const doc = await fetchProductBySlug(rawSlug);
   const d = doc || {
     title: "未找到该商品",
     material: "",
@@ -57,6 +58,13 @@ export default async function ProductDetailPage({ params }: Props) {
     return "tops";
   };
   const categoryParam = mapCategory(d.category);
+
+  // 精准排查：当 doc 缺失时检查列表是否能命中同 slug
+  let debugHit = false;
+  if (!doc) {
+    const pool = await fetchProducts({ limit: 200 });
+    debugHit = (pool || []).some((p) => (p.slug?.current || "").toLowerCase() === rawSlug.toLowerCase());
+  }
 
   // 若无 related，则回退到同性别同类目的最新产品（排除自身）
   let fallbackRelated: Array<{
@@ -115,7 +123,12 @@ export default async function ProductDetailPage({ params }: Props) {
             <p className="mt-2 text-sm text-zinc-700">{d.material || ""}</p>
             <div className="mt-4 text-lg">{priceText}</div>
             {!doc ? (
-              <div className="mt-4 text-sm text-zinc-600">未找到该商品，请返回列表或稍后再试。</div>
+              <div className="mt-4 text-sm text-zinc-600">
+                未找到该商品，请返回列表或稍后再试。
+                <div className="mt-2 text-xs text-zinc-500">
+                  调试：slug="{rawSlug}", 列表命中={String(debugHit)}
+                </div>
+              </div>
             ) : null}
 
             {/* 尺码与数量 */}
