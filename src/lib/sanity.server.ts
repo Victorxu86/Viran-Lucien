@@ -130,6 +130,21 @@ export async function fetchProductBySlug(slug: string): Promise<ProductDetailDoc
   }
 }
 
+// 兜底：当直接按 slug 查询失败时，先拉列表再匹配 slug（忽略大小写），再回查详情
+export async function fetchProductBySlugRobust(slug: string): Promise<ProductDetailDoc | null> {
+  const primary = await fetchProductBySlug(slug);
+  if (primary) return primary;
+  try {
+    const all = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, { limit: 200 });
+    const normalized = decodeURIComponent(String(slug || "")).trim().replace(/^\/+|\/+$/g, "");
+    const hit = (all || []).find((p) => (p.slug?.current || "").toLowerCase() === normalized.toLowerCase());
+    if (!hit?.slug?.current) return null;
+    return await fetchProductBySlug(hit.slug.current);
+  } catch {
+    return null;
+  }
+}
+
 // ========== Series ==========
 export type SeriesDoc = {
   _id: string;

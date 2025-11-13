@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import Grid from "@/components/Grid";
 import ProductCard from "@/components/ProductCard";
-import { fetchProductBySlug, fetchProducts } from "@/lib/sanity.server";
+import { fetchProductBySlugRobust as fetchProductBySlug, fetchProducts } from "@/lib/sanity.server";
 import Gallery from "@/components/Gallery";
 import Link from "next/link";
 import type { Metadata } from "next";
