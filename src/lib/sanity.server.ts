@@ -2,7 +2,8 @@ import "server-only";
 import { createClient } from "@sanity/client";
 import groq from "groq";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "gidffpzl";
+const defaultProjectId = "gidffpzl";
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || defaultProjectId;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
 const apiVersion = "2024-07-01";
 
@@ -10,7 +11,7 @@ export const sanityClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: false,
+  useCdn: true,
 });
 
 export type MaterialDoc = {
@@ -71,7 +72,10 @@ export type ProductDetailDoc = ProductCardDoc & {
   }>;
 };
 
-const productListQuery = groq`*[_type == "product"]{
+const productListQuery = groq`*[_type == "product" 
+  && (!defined($gender) || gender == $gender) 
+  && (!defined($category) || category == $category)
+]{
   _id,
   title,
   slug,
@@ -82,7 +86,7 @@ const productListQuery = groq`*[_type == "product"]{
   "images": coalesce(images[]{ asset->{url} }, [])
 } | order(_createdAt desc)[0...$limit]`;
 
-const productBySlugQuery = groq`*[_type == "product" && lower(slug.current) == lower($slug)][0]{
+const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0]{
   _id,
   title,
   slug,
@@ -103,16 +107,8 @@ const productBySlugQuery = groq`*[_type == "product" && lower(slug.current) == l
 export async function fetchProducts(params: { gender?: "men" | "women"; category?: string; limit?: number } = {}): Promise<ProductCardDoc[]> {
   try {
     const { gender, category, limit = 40 } = params;
-    const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, { limit });
-    let list = docs || [];
-    if (gender) {
-      list = list.filter((d) => (d.gender || "").toLowerCase() === gender);
-    }
-    if (category) {
-      const cat = category.toLowerCase();
-      list = list.filter((d) => (d.category || "").toLowerCase() === cat);
-    }
-    return list;
+    const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, { gender, category, limit });
+    return docs || [];
   } catch {
     return [];
   }
@@ -120,26 +116,8 @@ export async function fetchProducts(params: { gender?: "men" | "women"; category
 
 export async function fetchProductBySlug(slug: string): Promise<ProductDetailDoc | null> {
   try {
-    const normalized = decodeURIComponent(String(slug || ""))
-      .trim()
-      .replace(/^\/+|\/+$/g, "");
-    const doc = await sanityClient.fetch<ProductDetailDoc>(productBySlugQuery, { slug: normalized });
+    const doc = await sanityClient.fetch<ProductDetailDoc>(productBySlugQuery, { slug });
     return doc || null;
-  } catch {
-    return null;
-  }
-}
-
-// 兜底：当直接按 slug 查询失败时，先拉列表再匹配 slug（忽略大小写），再回查详情
-export async function fetchProductBySlugRobust(slug: string): Promise<ProductDetailDoc | null> {
-  const primary = await fetchProductBySlug(slug);
-  if (primary) return primary;
-  try {
-    const all = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, { limit: 200 });
-    const normalized = decodeURIComponent(String(slug || "")).trim().replace(/^\/+|\/+$/g, "");
-    const hit = (all || []).find((p) => (p.slug?.current || "").toLowerCase() === normalized.toLowerCase());
-    if (!hit?.slug?.current) return null;
-    return await fetchProductBySlug(hit.slug.current);
   } catch {
     return null;
   }
