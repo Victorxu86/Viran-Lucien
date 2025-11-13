@@ -110,8 +110,9 @@ export async function fetchProducts(params: { gender?: "men" | "women"; category
     const { gender, category, limit = 40 } = params;
     const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, { gender, category, limit });
     return docs || [];
-  } catch {
-    return [];
+  } catch (err) {
+    console.error("fetchProducts error", err);
+    throw err;
   }
 }
 
