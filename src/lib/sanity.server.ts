@@ -11,7 +11,8 @@ export const sanityClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: false,
+  perspective: "published",
 });
 
 export type MaterialDoc = {
