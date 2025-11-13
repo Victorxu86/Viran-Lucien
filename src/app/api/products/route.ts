@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchProducts } from "@/lib/sanity.server";
+import { fetchProducts, sanityClient } from "@/lib/sanity.server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -12,7 +12,14 @@ export async function GET(request: Request) {
     limit: Number(searchParams.get("limit") || 40),
   });
 
-  return NextResponse.json({ count: data.length, products: data });
+  const config = sanityClient.config();
+
+  return NextResponse.json({
+    count: data.length,
+    projectId: config.projectId,
+    dataset: config.dataset,
+    products: data,
+  });
 }
 
 
