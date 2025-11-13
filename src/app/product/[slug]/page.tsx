@@ -3,7 +3,6 @@ import Grid from "@/components/Grid";
 import ProductCard from "@/components/ProductCard";
 import { fetchProductBySlug, fetchProducts } from "@/lib/sanity.server";
 import Gallery from "@/components/Gallery";
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -14,15 +13,24 @@ export const runtime = "nodejs";
 
 export default async function ProductDetailPage({ params }: Props) {
   const doc = await fetchProductBySlug(params.slug);
-  if (!doc) {
-    notFound();
-  }
-  const images = (doc.images || [])
+  const d = doc || {
+    title: "未找到该商品",
+    material: "",
+    price: 0,
+    images: [] as Array<{ asset?: { url?: string } }>,
+    category: "",
+    gender: "men" as const,
+    sizes: [] as Array<{ label: string; available?: boolean }>,
+    craftsmanship: [] as string[],
+    description: "",
+    related: [] as any[],
+  };
+  const images = (d.images || [])
     .map((i) => i?.asset?.url)
     .filter((u): u is string => !!u);
   const galleryImages = images.length > 0 ? images : ["/feature-1.svg"];
-  const priceText = `¥${doc.price || 0}`;
-  const related = (doc.related || []).map((r) => {
+  const priceText = `¥${d.price || 0}`;
+  const related = (d.related || []).map((r) => {
     const rImg = (r.images || []).map((i) => i?.asset?.url).find(Boolean) || "/feature-2.svg";
     const slug = r.slug?.current || "";
     return {
@@ -36,7 +44,7 @@ export default async function ProductDetailPage({ params }: Props) {
   });
 
   // 计算面包屑与回链
-  const gender = (doc.gender || "").toLowerCase();
+  const gender = (d.gender || "").toLowerCase();
   const plpPath = gender === "women" ? "/women" : "/men";
   const mapCategory = (src?: string) => {
     const s = (src || "").toLowerCase();
@@ -45,7 +53,7 @@ export default async function ProductDetailPage({ params }: Props) {
     // Knitwear、Tops 都归并 tops
     return "tops";
   };
-  const categoryParam = mapCategory(doc.category);
+  const categoryParam = mapCategory(d.category);
 
   // 若无 related，则回退到同性别同类目的最新产品（排除自身）
   let fallbackRelated: Array<{
@@ -90,7 +98,7 @@ export default async function ProductDetailPage({ params }: Props) {
             {categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)}
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-zinc-800">{doc.title}</span>
+          <span className="text-zinc-800">{d.title}</span>
         </nav>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           {/* 左：图像展示 */}
@@ -100,15 +108,18 @@ export default async function ProductDetailPage({ params }: Props) {
 
           {/* 右：信息区 */}
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">{doc.title}</h1>
-            <p className="mt-2 text-sm text-zinc-700">{doc.material || ""}</p>
+            <h1 className="text-3xl font-semibold tracking-tight">{d.title}</h1>
+            <p className="mt-2 text-sm text-zinc-700">{d.material || ""}</p>
             <div className="mt-4 text-lg">{priceText}</div>
+            {!doc ? (
+              <div className="mt-4 text-sm text-zinc-600">未找到该商品，请返回列表或稍后再试。</div>
+            ) : null}
 
             {/* 尺码与数量 */}
             <div className="mt-6">
               <div className="text-sm text-zinc-700">选择尺码</div>
               <div className="mt-3 flex flex-wrap gap-2">
-                {(doc.sizes || []).map((s) => (
+                {(d.sizes || []).map((s) => (
                   <button
                     key={s.label || ""}
                     className="h-9 min-w-[44px] rounded-sm border px-3 text-sm disabled:opacity-40"
@@ -138,7 +149,7 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="mt-10">
               <h2 className="text-base">Craftsmanship</h2>
               <ul className="mt-3 list-disc pl-5 text-sm text-zinc-700">
-                {(doc.craftsmanship || []).map((h) => (
+                {(d.craftsmanship || []).map((h) => (
                   <li key={h as string}>{h}</li>
                 ))}
               </ul>
@@ -147,7 +158,7 @@ export default async function ProductDetailPage({ params }: Props) {
             {/* 描述 */}
             <div className="mt-8">
               <h2 className="text-base">Description</h2>
-              <p className="mt-3 text-sm text-zinc-700">{doc.description || ""}</p>
+              <p className="mt-3 text-sm text-zinc-700">{d.description || ""}</p>
             </div>
 
             {/* 售后与配送信息入口 */}
