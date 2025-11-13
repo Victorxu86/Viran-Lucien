@@ -123,6 +123,18 @@ export async function fetchProductBySlug(slug: string): Promise<ProductDetailDoc
   }
 }
 
+export async function fetchProductBySlugRobust(slug: string): Promise<ProductDetailDoc | null> {
+  const doc = await fetchProductBySlug(slug);
+  if (doc) return doc;
+  try {
+    // 再尝试一次，避免 Sanity CDN 短暂缓存 miss
+    const fresh = await sanityClient.withConfig({ useCdn: false }).fetch<ProductDetailDoc>(productBySlugQuery, { slug });
+    return fresh || null;
+  } catch {
+    return null;
+  }
+}
+
 // ========== Series ==========
 export type SeriesDoc = {
   _id: string;
