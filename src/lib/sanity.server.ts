@@ -108,7 +108,11 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
 export async function fetchProducts(params: { gender?: "men" | "women"; category?: string; limit?: number } = {}): Promise<ProductCardDoc[]> {
   try {
     const { gender, category, limit = 40 } = params;
-    const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, { gender, category, limit });
+    const queryParams: Record<string, unknown> = { limit };
+    if (gender) queryParams.gender = gender;
+    if (category) queryParams.category = category;
+
+    const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, queryParams);
     return docs || [];
   } catch (err) {
     console.error("fetchProducts error", err);
