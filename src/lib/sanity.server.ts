@@ -74,8 +74,8 @@ export type ProductDetailDoc = ProductCardDoc & {
 };
 
 const productListQuery = groq`*[_type == "product" 
-  && (!defined($gender) || gender == $gender) 
-  && (!defined($category) || category == $category)
+  && (!($gender != null) || gender == $gender) 
+  && (!($category != null) || category == $category)
 ]{
   _id,
   title,
@@ -108,9 +108,11 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
 export async function fetchProducts(params: { gender?: "men" | "women"; category?: string; limit?: number } = {}): Promise<ProductCardDoc[]> {
   try {
     const { gender, category, limit = 40 } = params;
-    const queryParams: Record<string, unknown> = { limit };
-    if (gender) queryParams.gender = gender;
-    if (category) queryParams.category = category;
+    const queryParams: Record<string, unknown> = {
+      limit,
+      gender: gender ?? null,
+      category: category ?? null,
+    };
 
     const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, queryParams);
     return docs || [];
