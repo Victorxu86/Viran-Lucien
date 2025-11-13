@@ -30,8 +30,11 @@ export default async function ProductDetailPage({ params }: Props) {
     .filter((u): u is string => !!u);
   const galleryImages = images.length > 0 ? images : ["/feature-1.svg"];
   const priceText = `¥${d.price || 0}`;
-  const related = (d.related || []).map((r) => {
-    const rImg = (r.images || []).map((i) => i?.asset?.url).find(Boolean) || "/feature-2.svg";
+  const related = (d.related || []).map((r: any) => {
+    const rImg =
+      (r.images || [])
+        .map((i: { asset?: { url?: string } }) => i?.asset?.url)
+        .find(Boolean) || "/feature-2.svg";
     const slug = r.slug?.current || "";
     return {
       slug,
