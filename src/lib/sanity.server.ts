@@ -73,10 +73,7 @@ export type ProductDetailDoc = ProductCardDoc & {
   }>;
 };
 
-const productListQuery = groq`*[_type == "product" 
-  && (!($gender != null) || gender == $gender) 
-  && (!($category != null) || category == $category)
-]{
+const PRODUCT_PROJECTION = `{
   _id,
   title,
   slug,
@@ -85,7 +82,7 @@ const productListQuery = groq`*[_type == "product"
   category,
   gender,
   "images": coalesce(images[]{ asset->{url} }, [])
-} | order(_createdAt desc)[0...$limit]`;
+}`;
 
 const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0]{
   _id,
@@ -108,13 +105,21 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
 export async function fetchProducts(params: { gender?: "men" | "women"; category?: string; limit?: number } = {}): Promise<ProductCardDoc[]> {
   try {
     const { gender, category, limit = 40 } = params;
-    const queryParams: Record<string, unknown> = {
-      limit,
-      gender: gender ?? null,
-      category: category ?? null,
-    };
+    const filters = ['_type == "product"'];
+    const queryParams: Record<string, unknown> = { limit };
 
-    const docs = await sanityClient.fetch<ProductCardDoc[]>(productListQuery, queryParams);
+    if (gender) {
+      filters.push('gender == $gender');
+      queryParams.gender = gender;
+    }
+    if (category) {
+      filters.push('category == $category');
+      queryParams.category = category;
+    }
+
+    const query = `*[${filters.join(" && ")}] ${PRODUCT_PROJECTION} | order(_createdAt desc)[0...$limit]`;
+
+    const docs = await sanityClient.fetch<ProductCardDoc[]>(query, queryParams);
     return docs || [];
   } catch (err) {
     console.error("fetchProducts error", err);
