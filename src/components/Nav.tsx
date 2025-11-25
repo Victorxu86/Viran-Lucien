@@ -210,90 +210,113 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
         <AnimatePresence>
           {open && activeItem && activeItem.panel && (
             <div
-              className="fixed left-0 right-0 z-[40]" // 修改: z-index 必须小于 header (z-50)，以便被 header 遮盖，但实际上我们希望它在 header 下方
+              className="absolute left-0 right-0 z-[40]"
+              // 移除 fixed 定位和硬编码的 top 值
+              // 改为相对于父容器 (li -> nav -> div) 定位。
+              // 但是为了全宽，我们需要特殊的 trick：
+              // 父级 li 是 relative，这会导致 absolute 受到 li 宽度限制。
+              // 解决方案：
+              // 1. 将 Nav 外部的容器设置为 relative，Nav 自身不设 relative（或者设为 static）。
+              //    但 Nav 目前在 Header 中是 relative 的。
+              // 2. 使用 fixed 定位但是动态计算位置 (复杂且容易抖动)。
+              // 3. 使用 left: 50% + transform: translateX(-50%) + w-screen
+              //    这会让内容相对于视口居中，只要父级没有 overflow: hidden。
               style={{ 
-                top: "var(--header-height, 113px)", // 这里需要精确匹配 header 的实际高度。目前 header 包含 AnnouncementBar(32px) + Container(py-4=32px + content)
-                // 假设 AnnouncementBar 32px, Header padding 16px*2=32px, Logo行+Nav行 约 50-60px
-                // 我们用 CSS 变量或者一个估算值。更稳健的是让 Header 传递高度。
-                // 暂时调整为 113px 试一下（32+81）
+                top: "100%", // 紧贴 Nav 底部
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "100vw", // 全屏宽度
+                paddingTop: "1.5rem" // 给一点缓冲区，避免鼠标移动时丢失 hover
               }}
               onMouseEnter={() => handleOpen(open)} // 保持打开
               onMouseLeave={() => handleOpen(null)}
             >
+               {/* 
+                  背景与容器
+                  将背景色直接应用在 motion.div 上，并让它全宽
+               */}
                <motion.div
-                 initial={{ opacity: 0, y: -10 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 exit={{ opacity: 0, y: -10 }}
-                 transition={{ duration: 0.2, ease: "easeOut" }}
+                 initial={{ opacity: 0 }}
+                 animate={{ opacity: 1 }}
+                 exit={{ opacity: 0 }}
+                 transition={{ duration: 0.2, ease: "linear" }} // 改为线性渐变，移除位移
                  className="relative w-full bg-transparent"
                >
-                 {/* 
-                    滑动内容容器 
-                    我们使用 key={activeItem.label} 来触发 framer-motion 的 exit/enter 动画，实现横向滑动
+                 {/* 内容容器：居中显示，但背景需要延伸到全宽？
+                     设计上，通常 MegaMenu 是全宽白色背景。
+                     我们这里让内部的 Card 居中。
                  */}
-                 <div className="relative mx-auto max-w-screen-xl px-6 pt-4"> {/* 增加 pt-4 替代之前的外部 padding */}
-                    <motion.div
-                       key={activeItem.label}
-                       initial={{ opacity: 0, x: direction * 20 }}
-                       animate={{ opacity: 1, x: 0 }}
-                       exit={{ opacity: 0, x: direction * -20, position: "absolute", top: 4, left: 0, right: 0 }} // 修正 exit 时的定位
-                       transition={{ type: "tween", ease: "easeInOut", duration: 0.25 }}
-                       className="bg-background border border-accent-12 shadow-xl rounded-sm overflow-hidden"
-                    >
-                       <div className="flex min-h-[280px]">
-                          {/* 左侧：链接列表 */}
-                          <div className="flex-1 p-8 md:p-10 bg-background">
-                             <h3 className="text-xs font-bold text-black uppercase tracking-widest mb-6">
-                               Explore {activeItem.label}
-                             </h3>
-                             <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-                                {activeItem.panel.map((link) => (
-                                  <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="group flex items-center gap-2 text-sm text-black hover:opacity-70 transition-opacity"
-                                    onClick={() => setOpen(null)}
-                                  >
-                                    <span className="w-0 h-[1px] bg-black group-hover:w-3 transition-all duration-300"></span>
-                                    {link.label}
+                 <div className="relative mx-auto max-w-screen-xl px-6">
+                    {/* 
+                       卡片本身
+                       这里需要处理横向滑动动画。
+                       为了实现“同位置渐显”，我们移除 x 轴位移，仅保留 opacity。
+                       或者，如果想要内容切换时的滑动感，可以保留内部内容的滑动，但外框不动。
+                    */}
+                    <div className="bg-background border border-accent-12 shadow-xl rounded-sm overflow-hidden">
+                       {/* 使用 AnimatePresence mode="wait" 或者直接切换内容来实现平滑过渡 */}
+                       <motion.div
+                           key={activeItem.label}
+                           initial={{ opacity: 0 }}
+                           animate={{ opacity: 1 }}
+                           exit={{ opacity: 0, position: "absolute", top: 0, left: 0, width: "100%", zIndex: -1 }} // 避免布局跳动
+                           transition={{ duration: 0.25, ease: "easeInOut" }}
+                       >
+                         <div className="flex min-h-[280px]">
+                            {/* 左侧：链接列表 */}
+                            <div className="flex-1 p-8 md:p-10 bg-background">
+                               <h3 className="text-xs font-bold text-black uppercase tracking-widest mb-6">
+                                 Explore {activeItem.label}
+                               </h3>
+                               <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+                                  {activeItem.panel.map((link) => (
+                                    <Link
+                                      key={link.href}
+                                      href={link.href}
+                                      className="group flex items-center gap-2 text-sm text-black hover:opacity-70 transition-opacity"
+                                      onClick={() => setOpen(null)}
+                                    >
+                                      <span className="w-0 h-[1px] bg-black group-hover:w-3 transition-all duration-300"></span>
+                                      {link.label}
+                                    </Link>
+                                  ))}
+                               </div>
+                               
+                               <div className="mt-10 pt-6 border-t border-black/10">
+                                  <Link href={activeItem.href} className="text-xs font-medium text-black uppercase tracking-wide border-b border-black pb-0.5 hover:opacity-70" onClick={() => setOpen(null)}>
+                                    View All {activeItem.label}
                                   </Link>
-                                ))}
-                             </div>
-                             
-                             <div className="mt-10 pt-6 border-t border-black/10">
-                                <Link href={activeItem.href} className="text-xs font-medium text-black uppercase tracking-wide border-b border-black pb-0.5 hover:opacity-70" onClick={() => setOpen(null)}>
-                                  View All {activeItem.label}
-                                </Link>
-                             </div>
-                          </div>
-
-                          {/* 右侧：精选内容 / 图片 */}
-                          {activeItem.featured && (
-                            <div className="hidden md:flex w-1/3 lg:w-2/5 bg-zinc-50 relative overflow-hidden group">
-                              {activeItem.featured.image && (
-                                <div className="absolute inset-0">
-                                   {/* 优先使用 Next.js Image，如果路径是静态资源，这里暂时用 img */}
-                                   <img 
-                                     src={activeItem.featured.image} 
-                                     alt={activeItem.featured.title}
-                                     className="h-full w-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700 ease-out"
-                                   />
-                                   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
-                                </div>
-                              )}
-                              
-                              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/60 to-transparent text-white">
-                                <h4 className="text-xl font-serif font-medium mb-1">{activeItem.featured.title}</h4>
-                                {activeItem.featured.description && (
-                                  <p className="text-sm text-white/90 line-clamp-2">{activeItem.featured.description}</p>
-                                )}
-                              </div>
-                              
-                              <Link href={activeItem.featured.href} className="absolute inset-0 z-10" aria-label={activeItem.featured.title} onClick={() => setOpen(null)} />
+                               </div>
                             </div>
-                          )}
-                        </div>
-                    </motion.div>
+
+                            {/* 右侧：精选内容 / 图片 */}
+                            {activeItem.featured && (
+                              <div className="hidden md:flex w-1/3 lg:w-2/5 bg-zinc-50 relative overflow-hidden group">
+                                {activeItem.featured.image && (
+                                  <div className="absolute inset-0">
+                                     {/* 优先使用 Next.js Image，如果路径是静态资源，这里暂时用 img */}
+                                     <img 
+                                       src={activeItem.featured.image} 
+                                       alt={activeItem.featured.title}
+                                       className="h-full w-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700 ease-out"
+                                     />
+                                     <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+                                  </div>
+                                )}
+                                
+                                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/60 to-transparent text-white">
+                                  <h4 className="text-xl font-serif font-medium mb-1">{activeItem.featured.title}</h4>
+                                  {activeItem.featured.description && (
+                                    <p className="text-sm text-white/90 line-clamp-2">{activeItem.featured.description}</p>
+                                  )}
+                                </div>
+                                
+                                <Link href={activeItem.featured.href} className="absolute inset-0 z-10" aria-label={activeItem.featured.title} onClick={() => setOpen(null)} />
+                              </div>
+                            )}
+                          </div>
+                       </motion.div>
+                    </div>
                  </div>
                </motion.div>
             </div>
