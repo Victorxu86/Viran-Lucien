@@ -210,10 +210,12 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
         <AnimatePresence>
           {open && activeItem && activeItem.panel && (
             <div
-              className="fixed left-0 right-0 z-[60]" // 修改3: 确保 z-index 足够高 (z-[60])，且使用 fixed 定位覆盖一切
+              className="fixed left-0 right-0 z-[40]" // 修改: z-index 必须小于 header (z-50)，以便被 header 遮盖，但实际上我们希望它在 header 下方
               style={{ 
-                top: "calc(var(--header-height, 80px) + 1px)", // 动态计算 Top，确保刚好在 Header 下方
-                paddingTop: "0" // 移除不必要的 padding，紧贴 Header
+                top: "var(--header-height, 113px)", // 这里需要精确匹配 header 的实际高度。目前 header 包含 AnnouncementBar(32px) + Container(py-4=32px + content)
+                // 假设 AnnouncementBar 32px, Header padding 16px*2=32px, Logo行+Nav行 约 50-60px
+                // 我们用 CSS 变量或者一个估算值。更稳健的是让 Header 传递高度。
+                // 暂时调整为 113px 试一下（32+81）
               }}
               onMouseEnter={() => handleOpen(open)} // 保持打开
               onMouseLeave={() => handleOpen(null)}
