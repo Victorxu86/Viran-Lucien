@@ -181,12 +181,13 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
                   setHoveredIndex(null);
                 }
               }}
-              className="relative flex h-full items-center"
+              className="relative flex h-full items-end pb-1" // 修改1: 增加 flex 容器的对齐方式为底部对齐，并添加底部 padding
             >
               <Link
                 href={item.href}
                 className={`nav-link text-sm tracking-wide transition-colors duration-200 
-                  ${isOpen ? "text-foreground font-medium" : "text-zinc-600 hover:text-foreground"}`}
+                  ${isOpen ? "text-black font-medium" : "text-black hover:opacity-70"}
+                  translate-y-1`} // 修改2: 文字全黑，并轻微下移 (translate-y-1)
                 onFocus={isMobileMode ? undefined : (() => hasPanel && handleOpen(item.label))}
                 onBlur={isMobileMode ? undefined : (() => hasPanel && handleOpen(null))}
                 onClick={(e) => handleTopLinkClick(e, item, hasPanel, isOpen)}
@@ -209,38 +210,31 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
         <AnimatePresence>
           {open && activeItem && activeItem.panel && (
             <div
-              className="absolute left-0 right-0 w-full"
-              style={{ top: "100%", paddingTop: "1.5rem" }} // 增加 paddingTop 以给鼠标移动留出缓冲区
+              className="fixed left-0 right-0 z-[60]" // 修改3: 确保 z-index 足够高 (z-[60])，且使用 fixed 定位覆盖一切
+              style={{ 
+                top: "calc(var(--header-height, 80px) + 1px)", // 动态计算 Top，确保刚好在 Header 下方
+                paddingTop: "0" // 移除不必要的 padding，紧贴 Header
+              }}
               onMouseEnter={() => handleOpen(open)} // 保持打开
               onMouseLeave={() => handleOpen(null)}
             >
-               {/* 
-                 使用 fixed 定位或者 w-screen absolute 定位来确保全宽。
-                 这里为了防止左侧溢出，我们使用 fixed 定位，根据 header 高度动态调整 top。
-                 或者使用 absolute + left-0 + w-screen 结合 relative parent (Nav or Header)。
-                 
-                 由于 Nav 组件是放在 Container 里的，直接 absolute w-screen 会有问题（相对于 Container）。
-                 最佳实践是：Portal 或者使用 fixed。
-                 为了简单且高性能，我们这里尝试 fixed + 居中布局。
-               */}
                <motion.div
                  initial={{ opacity: 0, y: -10 }}
                  animate={{ opacity: 1, y: 0 }}
                  exit={{ opacity: 0, y: -10 }}
                  transition={{ duration: 0.2, ease: "easeOut" }}
-                 className="fixed left-0 right-0 z-50 w-full bg-transparent"
-                 style={{ top: "var(--header-height, 80px)" }} // 假设 header 高度约为 80px，可调整
+                 className="relative w-full bg-transparent"
                >
                  {/* 
                     滑动内容容器 
                     我们使用 key={activeItem.label} 来触发 framer-motion 的 exit/enter 动画，实现横向滑动
                  */}
-                 <div className="relative mx-auto max-w-screen-xl px-6">
+                 <div className="relative mx-auto max-w-screen-xl px-6 pt-4"> {/* 增加 pt-4 替代之前的外部 padding */}
                     <motion.div
                        key={activeItem.label}
                        initial={{ opacity: 0, x: direction * 20 }}
                        animate={{ opacity: 1, x: 0 }}
-                       exit={{ opacity: 0, x: direction * -20, position: "absolute", top: 0, left: 0, width: "100%" }} // exit absolute 防止布局跳动
+                       exit={{ opacity: 0, x: direction * -20, position: "absolute", top: 4, left: 0, right: 0 }} // 修正 exit 时的定位
                        transition={{ type: "tween", ease: "easeInOut", duration: 0.25 }}
                        className="bg-background border border-accent-12 shadow-xl rounded-sm overflow-hidden"
                     >
@@ -276,6 +270,7 @@ export default function Nav({ hidePanels = false }: { hidePanels?: boolean }) {
                             <div className="hidden md:flex w-1/3 lg:w-2/5 bg-zinc-50 relative overflow-hidden group">
                               {activeItem.featured.image && (
                                 <div className="absolute inset-0">
+                                   {/* 优先使用 Next.js Image，如果路径是静态资源，这里暂时用 img */}
                                    <img 
                                      src={activeItem.featured.image} 
                                      alt={activeItem.featured.title}
