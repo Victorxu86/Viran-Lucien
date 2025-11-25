@@ -130,8 +130,12 @@ export async function fetchProducts(params: { gender?: "men" | "women"; category
 export async function fetchProductBySlug(slug: string): Promise<ProductDetailDoc | null> {
   try {
     const doc = await sanityClient.fetch<ProductDetailDoc>(productBySlugQuery, { slug });
+    if (!doc) {
+      console.warn("[sanity] fetchProductBySlug empty", { slug });
+    }
     return doc || null;
-  } catch {
+  } catch (err) {
+    console.error("[sanity] fetchProductBySlug error", { slug, err });
     return null;
   }
 }
